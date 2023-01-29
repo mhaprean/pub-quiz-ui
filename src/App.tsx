@@ -2,12 +2,15 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import classNames from 'classnames';
 import { useState } from 'react';
 import AddRoom from './components/AddRoom';
+import LoginRegister from './components/LoginRegister';
 import Navigation from './components/Navigation';
 import QuizSlide from './components/quiz/QuizSlide';
 import Rooms from './components/Rooms';
+import { useGetQuizesQuery } from './redux/apiSlice';
+import { useAppSelector } from './redux/hooks';
 
 function App() {
-
+  const authState = useAppSelector((root) => root.auth);
 
   const theme = createTheme({
     palette: {
@@ -31,20 +34,24 @@ function App() {
   const getCode = () => {
     let r = (Math.random() + 1).toString(36).substring(7).toUpperCase();
     return r;
-  }
+  };
 
   const roomPassword = getCode();
-
 
   return (
     <ThemeProvider theme={theme}>
       <div className="App dark">
+        <Navigation />
         <div className="container">
-          <Navigation />
+          {authState.isAuth && (
+            <>
+              <Rooms />
 
-          <Rooms />
+              <AddRoom password={roomPassword} />
+            </>
+          )}
 
-          <AddRoom password={roomPassword} />
+          {!authState.isAuth && <LoginRegister />}
         </div>
       </div>
     </ThemeProvider>

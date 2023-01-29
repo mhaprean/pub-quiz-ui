@@ -1,12 +1,13 @@
-import { Typography } from '@mui/material'
-import React from 'react'
+import { Typography } from '@mui/material';
 
 const Navigation = () => {
   return (
-    <div>
-      <Typography variant='h3'>PUB QUIZ</Typography>
+    <div className="Navigation">
+      <div className="container">
+        <Typography variant="h3">PUB QUIZ</Typography>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navigation
+export default Navigation;

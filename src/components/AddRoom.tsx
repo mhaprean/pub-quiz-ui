@@ -29,6 +29,7 @@ import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
 import { green, orange, pink, red } from '@mui/material/colors';
+import { useGetQuizesQuery } from '../redux/apiSlice';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -78,6 +79,8 @@ const AddRoom = ({ password }: IPropsAddRoom) => {
   const changeTab = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
+
+  const { data: quizes, isFetching } = useGetQuizesQuery({});
 
   return (
     <div className="AddRoom">
@@ -149,6 +152,19 @@ const AddRoom = ({ password }: IPropsAddRoom) => {
                 </ListItemAvatar>
                 <ListItemText primary="easy sport quiz" secondary={'difficulty: easy'} />
               </ListItem>
+
+              {!isFetching &&
+                quizes &&
+                quizes.map((quiz, idx) => (
+                  <ListItem key={idx}>
+                    <ListItemAvatar>
+                      <Avatar sx={{ bgcolor: green[200] }}>
+                        <OfflineBoltIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={quiz.title} secondary={'difficulty: ' + quiz.difficulty} />
+                  </ListItem>
+                ))}
             </List>
           </div>
         </DialogContent>
