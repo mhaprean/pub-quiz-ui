@@ -12,7 +12,7 @@ interface IRegisterResponse {
   access_token: string;
 }
 
-interface IQuiz {
+export interface IQuiz {
   _id: string;
   title: string;
   difficulty: string;

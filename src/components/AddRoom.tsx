@@ -27,9 +27,8 @@ import React from 'react';
 import { useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
-import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
-import { green, orange, pink, red } from '@mui/material/colors';
 import { useGetQuizesQuery } from '../redux/apiSlice';
+import QuizList from './quiz/QuizList';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -58,12 +57,19 @@ const StyledDialog = styled(Dialog)`
   .rocket {
     margin-left: auto;
   }
+
+  .host-quiz-button {
+    margin-top: 30px;
+  }
 `;
 
 const AddRoom = ({ password }: IPropsAddRoom) => {
   const [open, setOpen] = useState(false);
 
   const [tab, setTab] = useState('myquizes');
+
+  const [roomName, setRoomName] = useState('');
+  const [selectedQuiz, setSelectedQuiz] = useState('');
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -109,7 +115,7 @@ const AddRoom = ({ password }: IPropsAddRoom) => {
             </IconButton>
           </div>
           <Typography variant="subtitle2">Room name</Typography>
-          <TextField variant="outlined" />
+          <TextField variant="outlined" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
           <Typography variant="subtitle2">Room password:</Typography>
           <Typography variant="h4">{password}</Typography>
 
@@ -125,47 +131,18 @@ const AddRoom = ({ password }: IPropsAddRoom) => {
               </Tabs>
             </Box>
 
-            <List dense={true}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: orange[200] }}>
-                    <OfflineBoltIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="This is a nice quiz. not the hardest but not so easy." secondary={'Medium difficulty'} />
-              </ListItem>
-
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: red[200] }}>
-                    <OfflineBoltIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Hard one" secondary={'difficulty: hard'} />
-              </ListItem>
-
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: green[200] }}>
-                    <OfflineBoltIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="easy sport quiz" secondary={'difficulty: easy'} />
-              </ListItem>
-
-              {!isFetching &&
-                quizes &&
-                quizes.map((quiz, idx) => (
-                  <ListItem key={idx}>
-                    <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: green[200] }}>
-                        <OfflineBoltIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={quiz.title} secondary={'difficulty: ' + quiz.difficulty} />
-                  </ListItem>
-                ))}
-            </List>
+            <QuizList quizes={quizes || []} selectedQuiz={selectedQuiz} onSelectQuiz={setSelectedQuiz} />
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              size="large"
+              className="host-quiz-button"
+              disabled={selectedQuiz === '' || roomName === ''}
+            >
+              HOST QUIZ
+            </Button>
           </div>
         </DialogContent>
       </StyledDialog>

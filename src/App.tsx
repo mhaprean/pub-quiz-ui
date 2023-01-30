@@ -22,6 +22,9 @@ function App() {
       primary: {
         main: '#b0bfff',
       },
+      secondary: {
+        main: '#8fffad',
+      },
     },
     shape: {
       borderRadius: 10,
