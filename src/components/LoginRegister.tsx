@@ -56,7 +56,7 @@ const LoginRegister = () => {
         dispatch(login(res.access_token));
       }
     } catch (error: any) {
-      setError('there is an error');
+      setError(error.data.message ? error.data.message : 'there is an error');
     }
   };
 
@@ -78,7 +78,7 @@ const LoginRegister = () => {
         dispatch(login(res.access_token));
       }
     } catch (error: any) {
-      console.log('error during register: ', error);
+      setError(error.data.message ? error.data.message : 'there is an error. try again later');
     }
   };
 
@@ -128,6 +128,8 @@ const LoginRegister = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+
+          <div>{error}</div>
 
           <div>
             {tab === 'login' && (
