@@ -2,7 +2,7 @@ import { Button, Tab, Tabs, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import { useLoginUserMutation, useRegisterUserMutation } from '../redux/apiSlice';
-import { login } from '../redux/authSlice';
+import { login, setUser } from '../redux/authSlice';
 import { useAppDispatch } from '../redux/hooks';
 
 const StyledLoginRegister = styled('div')`
@@ -54,6 +54,7 @@ const LoginRegister = () => {
 
       if (res && res.access_token && res.user) {
         dispatch(login(res.access_token));
+        dispatch(setUser(res.user));
       }
     } catch (error: any) {
       setError(error.data.message ? error.data.message : 'there is an error');
@@ -76,6 +77,7 @@ const LoginRegister = () => {
 
       if (res && res.user && res.access_token) {
         dispatch(login(res.access_token));
+        dispatch(setUser(res.user));
       }
     } catch (error: any) {
       setError(error.data.message ? error.data.message : 'there is an error. try again later');

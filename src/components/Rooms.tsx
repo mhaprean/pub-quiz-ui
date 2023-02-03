@@ -1,39 +1,35 @@
-import { styled } from "@mui/material/styles";
-
-
+import { styled } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
+import { useGetGamesQuery } from '../redux/apiSlice';
+import { useAppSelector } from '../redux/hooks';
 
 const StyledRooms = styled('div')`
   margin-bottom: 30px;
 `;
 
 const Rooms = () => {
+  const authState = useAppSelector((root) => root.auth);
+
+  const { data: games, isLoading, isError } = useGetGamesQuery({}, { skip: !authState.isAuth });
+
   return (
     <StyledRooms className="Rooms">
       <h3>Rooms</h3>
 
-      <div className="room">
-        <div className="room-name">
-          <h2>Room 1</h2>
-        </div>
+      {!isLoading &&
+        games &&
+        games.map((game, idx) => (
+          <div className="room" key={idx}>
+            <div className="room-name">
+              <h2>{game.title}</h2>
+            </div>
 
-        <button className="button-join">Join room</button>
-      </div>
+            <Link to={`/rooms/${game._id}`}>
+              <button className="button-join">Join room</button>
+            </Link>
+          </div>
+        ))}
 
-      <div className="room">
-        <div className="room-name">
-          <h2>Room 2</h2>
-        </div>
-
-        <button className="button-join">Join room</button>
-      </div>
-
-      <div className="room">
-        <div className="room-name">
-          <h2>Room 3</h2>
-        </div>
-
-        <button className="button-join">Join room</button>
-      </div>
     </StyledRooms>
   );
 };

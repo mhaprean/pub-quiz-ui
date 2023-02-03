@@ -27,7 +27,7 @@ import React from 'react';
 import { useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
-import { useGetQuizesQuery } from '../redux/apiSlice';
+import { useCreateGameMutation, useGetQuizesQuery } from '../redux/apiSlice';
 import QuizList from './quiz/QuizList';
 
 const Transition = React.forwardRef(function Transition(
@@ -63,7 +63,7 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
-const AddRoom = ({ password }: IPropsAddRoom) => {
+const AddRoom = ({ password = '' }: IPropsAddRoom) => {
   const [open, setOpen] = useState(false);
 
   const [tab, setTab] = useState('myquizes');
@@ -73,6 +73,8 @@ const AddRoom = ({ password }: IPropsAddRoom) => {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const [createGame, response] = useCreateGameMutation();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -84,6 +86,19 @@ const AddRoom = ({ password }: IPropsAddRoom) => {
 
   const changeTab = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
+  };
+
+  const handleCreateGame = async () => {
+    try {
+      const res = await createGame({ quiz_id: selectedQuiz, title: roomName, password }).unwrap();
+
+      console.log('!!!!!!! handleCreateGame res: ', res);
+    } catch (error) {
+
+      console.log('!!!!!!! handleCreateGame error: ', error);
+
+    }
+
   };
 
   const { data: quizes, isFetching } = useGetQuizesQuery({});
@@ -140,6 +155,7 @@ const AddRoom = ({ password }: IPropsAddRoom) => {
               size="large"
               className="host-quiz-button"
               disabled={selectedQuiz === '' || roomName === ''}
+              onClick={handleCreateGame}
             >
               HOST QUIZ
             </Button>

@@ -1,7 +1,8 @@
 import { Logout } from '@mui/icons-material';
 import { Avatar, Box, IconButton, ListItemIcon, Menu, MenuItem, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useGetMyProfileQuery } from '../redux/apiSlice';
 import { logout } from '../redux/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
@@ -27,6 +28,8 @@ const Navigation = () => {
 
   const authState = useAppSelector((root) => root.auth);
 
+  const {data: profile, isLoading, isError} = useGetMyProfileQuery({});
+
   const dispatch = useAppDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,6 +42,13 @@ const Navigation = () => {
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  useEffect(() => {
+
+    if (isError) {
+      dispatch(logout());
+    }
+  }, [isError]);
 
   return (
     <StyledNavigation className="Navigation">

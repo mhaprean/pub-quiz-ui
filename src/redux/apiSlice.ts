@@ -22,6 +22,16 @@ export interface IQuiz {
   updatedAt: string;
 }
 
+interface ICreateGameResponse {}
+
+interface IGame {
+  _id: string;
+  title: string;
+  active: true;
+  participats: [];
+  quiz: string;
+}
+
 export const backendApi = createApi({
   reducerPath: 'backendapi',
   baseQuery: fetchBaseQuery({
@@ -44,6 +54,11 @@ export const backendApi = createApi({
     getQuizes: builder.query<IQuiz[], {}>({
       query: () => 'quiz',
     }),
+
+    getGames: builder.query<IGame[], {}>({
+      query: () => 'games',
+    }),
+
     loginUser: builder.mutation<ILoginResponse, { data: Partial<IUser> }>({
       query: ({ data }) => ({
         url: 'auth/login',
@@ -58,8 +73,23 @@ export const backendApi = createApi({
         body: data,
       }),
     }),
+
+    createGame: builder.mutation<ICreateGameResponse, { quiz_id: string; title: string; password: string }>({
+      query: (data) => ({
+        url: 'games/create',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
-export const { useLoginUserMutation, useRegisterUserMutation, useGetMyProfileQuery, useGetQuizesQuery } = backendApi;
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useGetMyProfileQuery,
+  useGetQuizesQuery,
+  useCreateGameMutation,
+  useGetGamesQuery,
+} = backendApi;
 
 export default backendApi;
