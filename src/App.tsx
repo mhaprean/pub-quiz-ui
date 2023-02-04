@@ -7,7 +7,6 @@ import Room from './pages/Room';
 import { useAppSelector } from './redux/hooks';
 
 function App() {
-  const authState = useAppSelector((root) => root.auth);
 
   const theme = createTheme({
     palette: {

@@ -12,6 +12,13 @@ interface IRegisterResponse {
   access_token: string;
 }
 
+export interface IQuestion {
+  question: string;
+  answers: string[];
+  correct_answer: string;
+  _id: string;
+}
+
 export interface IQuiz {
   _id: string;
   title: string;
@@ -20,16 +27,34 @@ export interface IQuiz {
   category: string;
   createdAt: string;
   updatedAt: string;
+
+  questions: IQuestion[];
 }
 
-interface ICreateGameResponse {}
+interface ICreateGameResponse extends IGame {
+  password: string;
+}
 
 interface IGame {
   _id: string;
   title: string;
   active: true;
   participats: [];
-  quiz: string;
+  // quiz: string;
+  host: string;
+}
+
+interface ISingleGame extends Omit<IGame, 'host'> {
+  password: string;
+  quiz: IQuiz;
+  host: {
+    _id: string;
+    name: string;
+    email: string;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+  };
 }
 
 export const backendApi = createApi({
@@ -57,6 +82,10 @@ export const backendApi = createApi({
 
     getGames: builder.query<IGame[], {}>({
       query: () => 'games',
+    }),
+
+    getCurrentGame: builder.query<ISingleGame, { gameId: string }>({
+      query: ({ gameId }) => `games/${gameId}`,
     }),
 
     loginUser: builder.mutation<ILoginResponse, { data: Partial<IUser> }>({
@@ -90,6 +119,7 @@ export const {
   useGetQuizesQuery,
   useCreateGameMutation,
   useGetGamesQuery,
+  useGetCurrentGameQuery,
 } = backendApi;
 
 export default backendApi;
