@@ -1,28 +1,40 @@
-import classNames from "classnames";
-import { useState } from "react";
+import { Button } from '@mui/material';
+import classNames from 'classnames';
+import { useState } from 'react';
+import { IQuestion } from '../../redux/apiSlice';
 
-const QuizSlide = () => {
+interface IPropsQuizSlide {
+  question: IQuestion;
+  onPickAnswer: (answer: string) => void;
+  pickable?: boolean;
+}
 
-  const q1 = {
-    question: 'Which of the following sports is not part of the triathlon?',
-    answers: ['Horse-Riding', 'Swimming', 'Cycling', 'Running'],
-    correct_answer: 'Horse-Riding',
-    _id: '63c410a987357b4055fcfcc1',
-  };
-
+const QuizSlide = ({ question, onPickAnswer, pickable = true }: IPropsQuizSlide) => {
   const options = ['A.', 'B.', 'C.', 'D.'];
-
   const [selected, setSelected] = useState('');
 
-  
+  const handlePickAnswer = (answer: string) => {
+    if (!pickable) {
+      return false;
+    }
+    setSelected(answer);
+    onPickAnswer(answer);
+  };
+
+  const decodeHtml = (html: string) => {
+    var txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
   return (
     <div className="quiz-slide">
-      <div className="question">Which of the following sports is not part of the triathlon?</div>
+      <div className="question">{decodeHtml(question.question)}</div>
 
       <div className="answers">
-        {q1.answers.map((answer, idx) => (
-          <div className={classNames('answer', { isSelected: selected === answer })} onClick={() => setSelected(answer)}>
-            {options[idx]} {answer}
+        {question.answers.map((answer, idx) => (
+          <div key={idx} className={classNames('answer', { isSelected: selected === answer })} onClick={() => handlePickAnswer(answer)}>
+            {options[idx]} {decodeHtml(answer)}
           </div>
         ))}
       </div>
