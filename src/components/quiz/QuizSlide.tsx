@@ -7,9 +7,10 @@ interface IPropsQuizSlide {
   question: IQuestion;
   onPickAnswer: (answer: string) => void;
   pickable?: boolean;
+  questionIndex?: number;
 }
 
-const QuizSlide = ({ question, onPickAnswer, pickable = true }: IPropsQuizSlide) => {
+const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0 }: IPropsQuizSlide) => {
   const options = ['A.', 'B.', 'C.', 'D.'];
   const [selected, setSelected] = useState('');
 
@@ -29,7 +30,10 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true }: IPropsQuizSlide)
 
   return (
     <div className="quiz-slide">
-      <div className="question">{decodeHtml(question.question)}</div>
+      <div className="question">
+        {`${questionIndex + 1}. `}
+        {decodeHtml(question.question)}
+      </div>
 
       <div className="answers">
         {question.answers.map((answer, idx) => (
