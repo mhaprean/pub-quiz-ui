@@ -64,7 +64,7 @@ export interface ISingleGame extends Omit<IGame, 'host'> {
 }
 
 
-const SERVER_URL = import.meta.env.SERVER_URL || 'http://localhost:5000';
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 
 export const backendApi = createApi({
