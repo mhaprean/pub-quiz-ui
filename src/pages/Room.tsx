@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 import NavigateBack from '../components/NavigateBack';
 
 import { useAppSelector } from '../redux/hooks';
-import { IQuestion, useGetCurrentGameQuery } from '../redux/apiSlice';
-import { Box, Button, Typography } from '@mui/material';
+import { IQuestion, IResultsUser, useGetCurrentGameQuery } from '../redux/apiSlice';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import QuizSlide from '../components/quiz/QuizSlide';
 
 import { Socket } from 'socket.io-client';
-
+import QuizResults from '../components/quiz/QuizResults';
 
 interface IJoinRoomPayload {
   gameId: string;
@@ -46,7 +46,15 @@ const Room = ({ socket }: IPropsRoom) => {
 
   const [gameStarted, setGameStarted] = useState(false);
 
+  const [showResults, setShowResults] = useState(false);
+
+  const [users, setUsers] = useState<IResultsUser[]>([]);
+
   const [question, setQuestion] = useState<IQuestion | null>(null);
+
+  const [password, setPassword] = useState('');
+
+  const [joined, setJoined] = useState(false);
 
   const [answer, setAnswer] = useState('');
 
@@ -56,40 +64,63 @@ const Room = ({ socket }: IPropsRoom) => {
 
   const authState = useAppSelector((state) => state.auth);
 
-  const { data: currentGame, isLoading } = useGetCurrentGameQuery({ gameId: id || '' }, { skip: !id });
+  const { data: currentGame, isLoading, refetch } = useGetCurrentGameQuery({ gameId: id || '' }, { skip: !id });
 
   useEffect(() => {
-    if (authState.user && id) {
+    const isHost = currentGame && currentGame.host._id === authState.user?._id;
+
+    console.log('!!!!!!! use effect run');
+
+    if (authState.user && id && isHost) {
       const joinData: IJoinRoomPayload = {
         gameId: id,
         userId: authState.user._id,
-        username: authState.user.name
+        username: authState.user.name,
       };
       socket.emit('join_room', joinData);
+
+      setJoined(true);
+
+      console.log('join_room emited by host');
     }
-  }, [id, authState.user]);
+  }, [id, authState.user, currentGame]);
 
   useEffect(() => {
     socket.on('QUIZ_STARTED', (data) => {
       console.log('!!!!! on QUIZ_STARTED ', data);
-      setGameStarted(true);
-      setCanSubmit(true);
-      setQuestion(data.question);
+
+      if (joined) {
+        setGameStarted(true);
+        setCanSubmit(true);
+        setQuestion(data.question);
+        setCurrentQuestionIdx(data.questionIdx);
+      }
     });
 
     socket.on('NEXT_QUESTION', (data) => {
       console.log('!!!!! on NEXT_QUESTION ', data);
-      setGameStarted(true);
-      setCanSubmit(true);
-      setQuestion(data.question);
-      setAnswer('');
+
+      if (joined) {
+        setGameStarted(true);
+        setCanSubmit(true);
+        setQuestion(data.question);
+        setAnswer('');
+        setCurrentQuestionIdx(data.questionIdx);
+      }
+    });
+
+    socket.on('QUIZ_ENDED', (data) => {
+      console.log('!!! on QUIZ_ENDED ', data);
+      setUsers(data.results);
+      setShowResults(true);
     });
 
     return () => {
       socket.off('QUIZ_STARTED');
       socket.off('NEXT_QUESTION');
+      socket.off('QUIZ_ENDED');
     };
-  }, []);
+  }, [joined]);
 
   /**
    *
@@ -117,7 +148,6 @@ const Room = ({ socket }: IPropsRoom) => {
    * function for game host
    */
   const onNextQuestion = () => {
-
     const newQuestion = currentGame?.quiz.questions[currentQuestionIdx + 1];
 
     if (newQuestion && id && authState.user) {
@@ -136,12 +166,25 @@ const Room = ({ socket }: IPropsRoom) => {
     }
   };
 
+  const handleJoinRoom = () => {
+    if (authState.user && id && password === currentGame?.password) {
+      const joinData: IJoinRoomPayload = {
+        gameId: id,
+        userId: authState.user._id,
+        username: authState.user.name,
+      };
+      socket.emit('join_room', joinData);
+
+      console.log('join_room emited by user');
+      setJoined(true);
+    }
+  };
+
   const handleChooseAnswer = (ans: string) => {
     setAnswer(ans);
   };
 
   const onSubmitAnswer = () => {
-
     if (id && authState.user) {
       const submitAnswerPayload: ISubmitAnswerPayload = {
         gameId: id,
@@ -162,6 +205,11 @@ const Room = ({ socket }: IPropsRoom) => {
         gameId: id,
       };
       socket.emit('GET_RESULTS', getResults);
+      setShowResults(true);
+
+      setTimeout(() => {
+        refetch();
+      }, 1000);
     }
   };
 
@@ -186,13 +234,47 @@ const Room = ({ socket }: IPropsRoom) => {
           )}
         </div>
         <div>
+          {currentGame && !gameStarted && !isGameHost && (
+            <>
+              {joined ? (
+                <Typography variant="h4">Wait for game to start</Typography>
+              ) : (
+                <div>
+                  <Typography variant="subtitle2">Enter room password: </Typography>
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <TextField variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} sx={{ flexGrow: 1 }} />
+
+                    <Button variant="contained" size="large" onClick={handleJoinRoom} sx={{ marginLeft: '20px' }}>
+                      JOIN
+                    </Button>
+                  </Box>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        <div>
           {isGameHost && !gameStarted && (
             <Button variant="contained" size="large" onClick={startGame}>
               START QUIZ
             </Button>
           )}
         </div>
-        <div>{gameStarted && question && <QuizSlide question={question} onPickAnswer={handleChooseAnswer} pickable={!isGameHost && canSubmit} />}</div>
+        <div>
+          {gameStarted && question && !showResults && (
+            <QuizSlide
+              question={question}
+              onPickAnswer={handleChooseAnswer}
+              pickable={!isGameHost && canSubmit}
+              questionIndex={currentQuestionIdx}
+            />
+          )}
+        </div>
+
+        <div>{showResults && <QuizResults users={users.length > 0 ? users : currentGame?.results || []} />}</div>
+
         <Box className="submit-button" sx={{ marginTop: '30px', display: 'flex' }}>
           {isGameHost && gameStarted && hasMoreQuestions && (
             <Button variant="contained" size="large" onClick={onNextQuestion} sx={{ marginLeft: 'auto' }}>
