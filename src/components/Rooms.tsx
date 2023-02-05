@@ -41,10 +41,14 @@ const Rooms = ({ socket }: IPropsRooms) => {
             </div>
 
             <Link to={`/rooms/${game._id}`}>
-              <button className="button-join">Join room</button>
+              <button className="button-join"> {authState.user?._id === game.host ? 'Host room' : 'Join room'}</button>
             </Link>
           </div>
         ))}
+
+        {!isLoading && (!games || games.length === 0) && <div>
+          No game rooms available yet. Please wait.
+          </div>}
     </StyledRooms>
   );
 };

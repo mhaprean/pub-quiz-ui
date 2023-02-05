@@ -14,9 +14,15 @@ interface IPropsQuizItem {
 const StyledQuizItem = styled(ListItem)`
   border: 2px solid ${(props) => props.theme.palette.background.paper};
   border-radius: 10px;
+  transition: all ease-in-out 0.2s;
   &.selected {
     border: 2px solid ${(props) => props.theme.palette.primary.main};
     background: ${(props) => props.theme.palette.background.paper};
+  }
+
+  &:hover {
+    border: 2px solid ${(props) => props.theme.palette.text.secondary};
+    cursor: pointer;
   }
 `;
 
