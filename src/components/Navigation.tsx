@@ -2,6 +2,7 @@ import { Logout } from '@mui/icons-material';
 import { Avatar, Box, IconButton, ListItemIcon, Menu, MenuItem, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGetMyProfileQuery } from '../redux/apiSlice';
 import { logout } from '../redux/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -26,9 +27,11 @@ const Navigation = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
+  const navigate = useNavigate();
+
   const authState = useAppSelector((root) => root.auth);
 
-  const {data: profile, isLoading, isError} = useGetMyProfileQuery({});
+  const { data: profile, isLoading, isError } = useGetMyProfileQuery({});
 
   const dispatch = useAppDispatch();
 
@@ -41,10 +44,10 @@ const Navigation = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate('/');
   };
 
   useEffect(() => {
-
     if (isError) {
       dispatch(logout());
     }
