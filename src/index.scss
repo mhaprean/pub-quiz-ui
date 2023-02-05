@@ -37,6 +37,11 @@
   --text-color: #fff;
 }
 
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 .App {
   background: var(--background-default);
   color: var(--text-color);

@@ -9,6 +9,7 @@ import QuizSlide from '../components/quiz/QuizSlide';
 
 import { Socket } from 'socket.io-client';
 import QuizResults from '../components/quiz/QuizResults';
+import JoinRoom from '../components/game/JoinRoom';
 
 interface IJoinRoomPayload {
   gameId: string;
@@ -40,6 +41,10 @@ interface IPropsRoom {
   socket: Socket;
 }
 
+interface IGameEndedPayload {
+  results: IResultsUser[];
+}
+
 const Room = ({ socket }: IPropsRoom) => {
   // game id
   const { id } = useParams();
@@ -52,7 +57,7 @@ const Room = ({ socket }: IPropsRoom) => {
 
   const [question, setQuestion] = useState<IQuestion | null>(null);
 
-  const [password, setPassword] = useState('');
+  const [errorPass, setErrorPass] = useState(false);
 
   const [joined, setJoined] = useState(false);
 
@@ -66,10 +71,12 @@ const Room = ({ socket }: IPropsRoom) => {
 
   const { data: currentGame, isLoading, refetch } = useGetCurrentGameQuery({ gameId: id || '' }, { skip: !id });
 
+  const isGameHost = currentGame && currentGame.host._id === authState.user?._id;
+
+  const hasMoreQuestions = currentGame && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
+
   useEffect(() => {
     const isHost = currentGame && currentGame.host._id === authState.user?._id;
-
-    console.log('!!!!!!! use effect run');
 
     if (authState.user && id && isHost) {
       const joinData: IJoinRoomPayload = {
@@ -86,7 +93,7 @@ const Room = ({ socket }: IPropsRoom) => {
   }, [id, authState.user, currentGame]);
 
   useEffect(() => {
-    socket.on('QUIZ_STARTED', (data) => {
+    socket.on('QUIZ_STARTED', (data: IStartGamePayload) => {
       console.log('!!!!! on QUIZ_STARTED ', data);
 
       if (joined) {
@@ -97,7 +104,7 @@ const Room = ({ socket }: IPropsRoom) => {
       }
     });
 
-    socket.on('NEXT_QUESTION', (data) => {
+    socket.on('NEXT_QUESTION', (data: INextQuestionPayload) => {
       console.log('!!!!! on NEXT_QUESTION ', data);
 
       if (joined) {
@@ -109,7 +116,7 @@ const Room = ({ socket }: IPropsRoom) => {
       }
     });
 
-    socket.on('QUIZ_ENDED', (data) => {
+    socket.on('QUIZ_ENDED', (data: IGameEndedPayload) => {
       console.log('!!! on QUIZ_ENDED ', data);
       setUsers(data.results);
       setShowResults(true);
@@ -166,17 +173,22 @@ const Room = ({ socket }: IPropsRoom) => {
     }
   };
 
-  const handleJoinRoom = () => {
-    if (authState.user && id && password === currentGame?.password) {
-      const joinData: IJoinRoomPayload = {
-        gameId: id,
-        userId: authState.user._id,
-        username: authState.user.name,
-      };
-      socket.emit('join_room', joinData);
+  const handleJoinRoom = (pass: string) => {
+    if (authState.user && id) {
+      if (pass === currentGame?.password) {
+        const joinData: IJoinRoomPayload = {
+          gameId: id,
+          userId: authState.user._id,
+          username: authState.user.name,
+        };
+        socket.emit('join_room', joinData);
 
-      console.log('join_room emited by user');
-      setJoined(true);
+        console.log('join_room emited by user');
+        setJoined(true);
+        setErrorPass(false);
+      } else {
+        setErrorPass(true);
+      }
     }
   };
 
@@ -213,18 +225,11 @@ const Room = ({ socket }: IPropsRoom) => {
     }
   };
 
-  const isGameHost = currentGame && currentGame.host._id === authState.user?._id;
-
-  const hasMoreQuestions = currentGame && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
-
   return (
     <div className="RoomPage">
       <div className="container">
         <NavigateBack />
 
-        {/* <div>Room {id}</div>
-        
-        <div>{joined ? 'joined' : 'not joined'}</div> */}
         <div>
           {isGameHost && (
             <div>
@@ -233,27 +238,11 @@ const Room = ({ socket }: IPropsRoom) => {
             </div>
           )}
         </div>
-        <div>
-          {currentGame && !gameStarted && !isGameHost && (
-            <>
-              {joined ? (
-                <Typography variant="h4">Wait for game to start</Typography>
-              ) : (
-                <div>
-                  <Typography variant="subtitle2">Enter room password: </Typography>
 
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <TextField variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} sx={{ flexGrow: 1 }} />
-
-                    <Button variant="contained" size="large" onClick={handleJoinRoom} sx={{ marginLeft: '20px' }}>
-                      JOIN
-                    </Button>
-                  </Box>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+        {/* This is for the regular user. When user wants to join, the room password is required.
+          Display an error message if the password is wrong, and success message when is correct. 
+        */}
+        {currentGame && !gameStarted && !isGameHost && <JoinRoom onJoin={handleJoinRoom} error={errorPass} joined={joined} />}
 
         <div>
           {isGameHost && !gameStarted && (
