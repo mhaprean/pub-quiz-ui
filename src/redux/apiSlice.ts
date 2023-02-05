@@ -63,10 +63,14 @@ export interface ISingleGame extends Omit<IGame, 'host'> {
   };
 }
 
+
+const SERVER_URL = import.meta.env.SERVER_URL || 'http://localhost:5000';
+
+
 export const backendApi = createApi({
   reducerPath: 'backendapi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/',
+    baseUrl: `${SERVER_URL}/api`,
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as RootState;
       const token = state.auth.token;

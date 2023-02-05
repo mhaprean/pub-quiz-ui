@@ -9,7 +9,7 @@ import { useAppSelector } from './redux/hooks';
 import * as io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
 
-const SERVER_URL = import.meta.env.SERVER_URL || 'http://localhost:5000/';
+const SERVER_URL = import.meta.env.SERVER_URL || 'http://localhost:5000';
 
 const socket: Socket = io.connect(SERVER_URL);
 
