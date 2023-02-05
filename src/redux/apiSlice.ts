@@ -35,6 +35,11 @@ interface ICreateGameResponse extends IGame {
   password: string;
 }
 
+export interface IResultsUser {
+  username: string;
+  points: string;
+}
+
 interface IGame {
   _id: string;
   title: string;
@@ -42,9 +47,10 @@ interface IGame {
   participats: [];
   // quiz: string;
   host: string;
+  results: IResultsUser[];
 }
 
-interface ISingleGame extends Omit<IGame, 'host'> {
+export interface ISingleGame extends Omit<IGame, 'host'> {
   password: string;
   quiz: IQuiz;
   host: {
