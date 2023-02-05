@@ -10,6 +10,7 @@ import QuizSlide from '../components/quiz/QuizSlide';
 import { Socket } from 'socket.io-client';
 import QuizResults from '../components/quiz/QuizResults';
 import JoinRoom from '../components/game/JoinRoom';
+import HostRoomHeader from '../components/game/HostRoomHeader';
 
 interface IJoinRoomPayload {
   gameId: string;
@@ -67,6 +68,8 @@ const Room = ({ socket }: IPropsRoom) => {
 
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
 
+  const [participantsCount, setParticipantsCount] = useState(1);
+
   const authState = useAppSelector((state) => state.auth);
 
   const { data: currentGame, isLoading, refetch } = useGetCurrentGameQuery({ gameId: id || '' }, { skip: !id });
@@ -122,10 +125,16 @@ const Room = ({ socket }: IPropsRoom) => {
       setShowResults(true);
     });
 
+    socket.on('USER_JOINED', (data: { countUsers: number }) => {
+      console.log('!!!!! on USER_JOINED ', data);
+      setParticipantsCount(data.countUsers);
+    });
+
     return () => {
       socket.off('QUIZ_STARTED');
       socket.off('NEXT_QUESTION');
       socket.off('QUIZ_ENDED');
+      socket.off('USER_JOINED');
     };
   }, [joined]);
 
@@ -230,14 +239,10 @@ const Room = ({ socket }: IPropsRoom) => {
       <div className="container">
         <NavigateBack />
 
-        <div>
-          {isGameHost && (
-            <div>
-              <Typography variant="subtitle2">Room password:</Typography>
-              <Typography variant="h4">{currentGame?.password}</Typography>
-            </div>
-          )}
-        </div>
+        {/* This is for the room host.
+          Alaways display the room password and the total number of users. 
+        */}
+        {isGameHost && currentGame?.password && <HostRoomHeader password={currentGame.password} total={participantsCount} />}
 
         {/* This is for the regular user. When user wants to join, the room password is required.
           Display an error message if the password is wrong, and success message when is correct. 
