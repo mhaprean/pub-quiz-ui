@@ -11,7 +11,9 @@ import { Socket } from 'socket.io-client';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
-const socket: Socket = io.connect(SERVER_URL);
+const socket: Socket = io.connect(SERVER_URL, {
+  withCredentials: true,
+});
 
 function App() {
   const theme = createTheme({
