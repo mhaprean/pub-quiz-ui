@@ -1,3 +1,4 @@
+import { Button, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,6 +8,23 @@ import { useAppSelector } from '../redux/hooks';
 
 const StyledRooms = styled('div')`
   margin-bottom: 30px;
+
+  .room {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid var(--input-border-color);
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 10px;
+    background: var(--background-paper);
+  }
+
+  .room-button {
+    text-transform: initial;
+    font-weight: ${(props) => props.theme.typography.fontWeightBold};
+    flex-shrink: 0;
+  }
 `;
 
 interface IPropsRooms {
@@ -28,6 +46,13 @@ const Rooms = ({ socket }: IPropsRooms) => {
     };
   }, [refetch]);
 
+
+  const decodeHtml = (html: string) => {
+    var txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
   return (
     <StyledRooms className="Rooms">
       <h3>Rooms</h3>
@@ -37,18 +62,23 @@ const Rooms = ({ socket }: IPropsRooms) => {
         games.map((game, idx) => (
           <div className="room" key={idx}>
             <div className="room-name">
-              <h2>{game.title}</h2>
+              <Typography className="room-name" variant="h6">
+                {decodeHtml(game.title)}
+              </Typography>
             </div>
 
             <Link to={`/rooms/${game._id}`}>
-              <button className="button-join"> {authState.user?._id === game.host ? 'Host room' : 'Join room'}</button>
+              <Button variant="contained" size="large" className="room-button">
+                <Typography variant='h6' component={'span'} noWrap>
+                {authState.user?._id === game.host ? 'Host room' : 'Join room'}
+                </Typography>
+
+              </Button>
             </Link>
           </div>
         ))}
 
-        {!isLoading && (!games || games.length === 0) && <div>
-          No game rooms available yet. Please wait.
-          </div>}
+      {!isLoading && (!games || games.length === 0) && <div>No game rooms available yet. Please wait.</div>}
     </StyledRooms>
   );
 };
