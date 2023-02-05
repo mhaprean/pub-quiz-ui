@@ -6,8 +6,13 @@ import NotFoundPage from './pages/NotFoundPage';
 import Room from './pages/Room';
 import { useAppSelector } from './redux/hooks';
 
-function App() {
+import * as io from 'socket.io-client';
+import { Socket } from 'socket.io-client';
+const SERVER_URL = 'http://localhost:5000/';
 
+const socket: Socket = io.connect(SERVER_URL);
+
+function App() {
   const theme = createTheme({
     palette: {
       mode: 'dark',
@@ -35,8 +40,8 @@ function App() {
       <div className="App dark">
         <Navigation />
         <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/rooms/:id" element={<Room />} />
+          <Route path="/" element={<Homepage socket={socket} />} />
+          <Route path="/rooms/:id" element={<Room socket={socket} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

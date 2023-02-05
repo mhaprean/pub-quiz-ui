@@ -78,6 +78,7 @@ export const backendApi = createApi({
     }),
     getQuizes: builder.query<IQuiz[], {}>({
       query: () => 'quiz',
+      providesTags: ['Quiz'],
     }),
 
     getGames: builder.query<IGame[], {}>({
@@ -109,6 +110,7 @@ export const backendApi = createApi({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['Quiz'],
     }),
   }),
 });

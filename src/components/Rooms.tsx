@@ -1,5 +1,7 @@
 import { styled } from '@mui/material/styles';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Socket } from 'socket.io-client';
 import { useGetGamesQuery } from '../redux/apiSlice';
 import { useAppSelector } from '../redux/hooks';
 
@@ -7,10 +9,24 @@ const StyledRooms = styled('div')`
   margin-bottom: 30px;
 `;
 
-const Rooms = () => {
+interface IPropsRooms {
+  socket: Socket;
+}
+
+const Rooms = ({ socket }: IPropsRooms) => {
   const authState = useAppSelector((root) => root.auth);
 
-  const { data: games, isLoading, isError } = useGetGamesQuery({}, { skip: !authState.isAuth });
+  const { data: games, isLoading, isError, refetch } = useGetGamesQuery({}, { skip: !authState.isAuth });
+
+  useEffect(() => {
+    socket.on('SHOULD_REFETCH_ROOMS', () => {
+      refetch();
+    });
+
+    return () => {
+      socket.off('SHOULD_REFETCH_ROOMS');
+    };
+  }, [refetch]);
 
   return (
     <StyledRooms className="Rooms">
@@ -29,7 +45,6 @@ const Rooms = () => {
             </Link>
           </div>
         ))}
-
     </StyledRooms>
   );
 };

@@ -29,6 +29,7 @@ import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useCreateGameMutation, useGetQuizesQuery } from '../redux/apiSlice';
 import QuizList from './quiz/QuizList';
+import { useNavigate } from 'react-router-dom';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -41,6 +42,7 @@ const Transition = React.forwardRef(function Transition(
 
 interface IPropsAddRoom {
   password?: string;
+  onRoomCreated?: () => void;
 }
 
 const StyledDialog = styled(Dialog)`
@@ -63,7 +65,9 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
-const AddRoom = ({ password = '' }: IPropsAddRoom) => {
+const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
 
   const [tab, setTab] = useState('myquizes');
@@ -92,13 +96,11 @@ const AddRoom = ({ password = '' }: IPropsAddRoom) => {
     try {
       const res = await createGame({ quiz_id: selectedQuiz, title: roomName, password }).unwrap();
 
-      console.log('!!!!!!! handleCreateGame res: ', res);
+      onRoomCreated();
+      navigate(`/rooms/${res._id}`);
     } catch (error) {
-
-      console.log('!!!!!!! handleCreateGame error: ', error);
-
+      console.log('handleCreateGame error: ', error);
     }
-
   };
 
   const { data: quizes, isFetching } = useGetQuizesQuery({});
