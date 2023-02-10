@@ -44,7 +44,7 @@ interface IGame {
   _id: string;
   title: string;
   active: true;
-  participats: [];
+  participats: string[];
   // quiz: string;
   host: string;
   results: IResultsUser[];
@@ -63,9 +63,9 @@ export interface ISingleGame extends Omit<IGame, 'host'> {
   };
 }
 
+interface IJoinGameResponse {}
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
-
 
 export const backendApi = createApi({
   reducerPath: 'backendapi',
@@ -80,7 +80,7 @@ export const backendApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Quiz'],
+  tagTypes: ['Quiz', 'Game'],
 
   endpoints: (builder) => ({
     getMyProfile: builder.query<IUser, {}>({
@@ -93,10 +93,12 @@ export const backendApi = createApi({
 
     getGames: builder.query<IGame[], {}>({
       query: () => 'games',
+      providesTags: ['Game'],
     }),
 
     getCurrentGame: builder.query<ISingleGame, { gameId: string }>({
       query: ({ gameId }) => `games/${gameId}`,
+      providesTags: ['Game'],
     }),
 
     loginUser: builder.mutation<ILoginResponse, { data: Partial<IUser> }>({
@@ -122,6 +124,15 @@ export const backendApi = createApi({
       }),
       invalidatesTags: ['Quiz'],
     }),
+
+    joinGame: builder.mutation<IJoinGameResponse, { gameId: string; password: string }>({
+      query: (data) => ({
+        url: `games/join/${data.gameId}`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Game'],
+    }),
   }),
 });
 export const {
@@ -132,6 +143,7 @@ export const {
   useCreateGameMutation,
   useGetGamesQuery,
   useGetCurrentGameQuery,
+  useJoinGameMutation,
 } = backendApi;
 
 export default backendApi;
