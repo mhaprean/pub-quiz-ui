@@ -124,6 +124,8 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false 
       socket.off('QUIZ_ENDED');
       socket.off('USER_JOINED');
 
+      socket.off('join_room');
+
       socket.emit('leave_room', joinData);
       console.log('leave room emited');
     };
