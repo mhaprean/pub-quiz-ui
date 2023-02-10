@@ -71,6 +71,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false 
   const hasMoreQuestions = currentGame && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
 
   useEffect(() => {
+    console.log('socket from room: ', socket.id);
     const joinData: IJoinRoomPayload = {
       gameId: currentGame._id,
       userId: user._id,
@@ -104,6 +105,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false 
       console.log('!!! on QUIZ_ENDED ', data);
       setUsers(data.results);
       setShowResults(true);
+      onRefetch();
     });
 
     socket.on('USER_JOINED', (data: { countUsers: number }) => {

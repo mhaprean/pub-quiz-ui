@@ -37,6 +37,7 @@ const Rooms = ({ socket }: IPropsRooms) => {
   const { data: games, isLoading, isError, refetch } = useGetGamesQuery({}, { skip: !authState.isAuth });
 
   useEffect(() => {
+    console.log('socket from rooms: ', socket.id);
     socket.on('SHOULD_REFETCH_ROOMS', () => {
       refetch();
     });
