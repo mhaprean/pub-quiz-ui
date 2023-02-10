@@ -8,6 +8,7 @@ import { useAppSelector } from './redux/hooks';
 
 import * as io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
+import RoomPage from './pages/RoomPage';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
@@ -44,7 +45,8 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<Homepage socket={socket} />} />
-          <Route path="/rooms/:id" element={<Room socket={socket} />} />
+          <Route path="/rooms/:id" element={<RoomPage socket={socket} />} />
+          {/* <Route path="/rooms/:id" element={<Room socket={socket} />} /> */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

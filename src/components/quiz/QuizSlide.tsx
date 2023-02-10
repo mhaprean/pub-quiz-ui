@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { IQuestion } from '../../redux/apiSlice';
@@ -31,8 +31,10 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0 
   return (
     <div className="quiz-slide">
       <div className="question">
-        {`${questionIndex + 1}. `}
-        {decodeHtml(question.question)}
+        <Typography variant='h5'>
+          {`${questionIndex + 1}. `}
+          {decodeHtml(question.question)}
+        </Typography>
       </div>
 
       <div className="answers">

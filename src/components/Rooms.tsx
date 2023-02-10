@@ -46,7 +46,6 @@ const Rooms = ({ socket }: IPropsRooms) => {
     };
   }, [refetch]);
 
-
   const decodeHtml = (html: string) => {
     var txt = document.createElement('textarea');
     txt.innerHTML = html;
@@ -69,10 +68,7 @@ const Rooms = ({ socket }: IPropsRooms) => {
 
             <Link to={`/rooms/${game._id}`}>
               <Button variant="contained" size="large" className="room-button">
-                <Typography variant='h6' component={'span'} noWrap>
                 {authState.user?._id === game.host ? 'Host room' : 'Join room'}
-                </Typography>
-
               </Button>
             </Link>
           </div>
