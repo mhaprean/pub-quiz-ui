@@ -1,8 +1,9 @@
-import { Logout } from '@mui/icons-material';
+import { Logout, Quiz as QuizIcon, Create as CreateIcon } from '@mui/icons-material';
+
 import { Avatar, Box, IconButton, ListItemIcon, Menu, MenuItem, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useGetMyProfileQuery } from '../redux/apiSlice';
 import { logout } from '../redux/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -56,9 +57,11 @@ const Navigation = () => {
   return (
     <StyledNavigation className="Navigation">
       <div className="container">
-        <Typography variant="h3" className="logo">
-          PUB QUIZ
-        </Typography>
+        <Link to="/">
+          <Typography variant="h3" className="logo">
+            PUB QUIZ
+          </Typography>
+        </Link>
 
         {authState.isAuth && (
           <>
@@ -116,6 +119,24 @@ const Navigation = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
+        <Link to={'/quiz/create'}>
+          <MenuItem>
+            <ListItemIcon>
+              <CreateIcon fontSize="small" />
+            </ListItemIcon>
+            Create Quiz
+          </MenuItem>
+        </Link>
+
+        <Link to={'/games'}>
+          <MenuItem>
+            <ListItemIcon>
+              <QuizIcon fontSize="small" />
+            </ListItemIcon>
+            My games
+          </MenuItem>
+        </Link>
+
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />

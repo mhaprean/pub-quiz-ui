@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, Box, Button, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
+import NavigateBack from '../NavigateBack';
 
 interface IPropsJoinRoom {
   joined?: boolean;
@@ -12,6 +13,7 @@ const JoinRoom = ({ joined = false, error = false, onJoin }: IPropsJoinRoom) => 
 
   return (
     <div className="JoinRoom">
+      <NavigateBack />
       {!joined && (
         <div>
           <Typography variant="subtitle2">Enter room password: </Typography>

@@ -66,6 +66,15 @@ export interface ISingleGame extends Omit<IGame, 'host'> {
 
 interface IJoinGameResponse {}
 
+export interface IQuizQuestion {
+  id: string;
+  question: string;
+  answers: string[];
+  correct_answer: string;
+}
+
+interface ICreateQuizResponse {}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 export const backendApi = createApi({
@@ -117,6 +126,15 @@ export const backendApi = createApi({
       }),
     }),
 
+    createQuiz: builder.mutation<ICreateQuizResponse, { title: string; category: string; difficulty: string; questions: IQuizQuestion[] }>({
+      query: (data) => ({
+        url: 'quiz/create',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Quiz'],
+    }),
+
     createGame: builder.mutation<ICreateGameResponse, { quiz_id: string; title: string; password: string }>({
       query: (data) => ({
         url: 'games/create',
@@ -145,6 +163,7 @@ export const {
   useGetGamesQuery,
   useGetCurrentGameQuery,
   useJoinGameMutation,
+  useCreateQuizMutation,
 } = backendApi;
 
 export default backendApi;

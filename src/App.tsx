@@ -10,6 +10,8 @@ import RoomPage from './pages/RoomPage';
 import * as io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
 import { useEffect, useState } from 'react';
+import MyGames from './pages/MyGames';
+import CreateQuiz from './pages/CreateQuiz';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
@@ -81,6 +83,9 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<Homepage socket={socket} />} />
+          <Route path="/games" element={<MyGames />} />
+          <Route path="/quiz/create" element={<CreateQuiz />} />
+
           <Route path="/rooms/:id" element={<RoomPage socket={socket} isConnected={isConnected} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

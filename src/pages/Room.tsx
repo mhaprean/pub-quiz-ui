@@ -243,7 +243,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
   return (
     <div className="RoomPage">
       <div className="container">
-        <NavigateBack />
 
         {/* This is for the room host.
           Alaways display the room password and the total number of users. 
