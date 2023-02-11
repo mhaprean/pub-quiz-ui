@@ -22,9 +22,8 @@ const HostRoomHeader = ({ password, total }: IPropsHostRoomHeader) => {
         <Typography variant="h4">{password}</Typography>
       </div>
       <div>
-        <Typography variant="h6">
-          {total}
-          {total > 1 ? ' Users' : ' User'}
+        <Typography variant="subtitle2">
+          Online: {total} {total > 1 ? ' Users' : ' User'}
         </Typography>
       </div>
     </StyledHostRoomHeader>

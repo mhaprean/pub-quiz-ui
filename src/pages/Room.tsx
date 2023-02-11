@@ -2,13 +2,31 @@ import { useEffect, useState } from 'react';
 import NavigateBack from '../components/NavigateBack';
 
 import { IQuestion, IResultsUser, ISingleGame } from '../redux/apiSlice';
-import { Box, Button } from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material';
 import QuizSlide from '../components/quiz/QuizSlide';
 
 import { Socket } from 'socket.io-client';
 import QuizResults from '../components/quiz/QuizResults';
 import HostRoomHeader from '../components/game/HostRoomHeader';
 import { IUser } from '../redux/authSlice';
+
+interface IRoomUser {
+  id: string;
+  name: string;
+  points: number;
+}
+
+interface IRoomGame {
+  expectedAnswer: string;
+  started: boolean;
+  currentQuestion: IQuestion | null;
+  questionIdx: number;
+  questionAnsweredBy: string[];
+  onlineUsers: string[];
+  users: {
+    [key: string]: IRoomUser;
+  };
+}
 
 interface IJoinRoomPayload {
   gameId: string;
@@ -41,17 +59,8 @@ interface IGameEndedPayload {
   results: IResultsUser[];
 }
 
-interface IQuizGame {
-  currentQuestion: IQuestion;
-  expectedAnswer: string;
-  onlineUsers: string[];
-  questionIdx: number;
-  started: boolean;
-  users: any[];
-}
-
 interface IGameRestore {
-  game: IQuizGame;
+  game: IRoomGame;
 }
 
 interface IPropsRoom {
@@ -123,19 +132,21 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       onRefetch();
     });
 
-    socket.on('USER_JOINED', (data: { countUsers: number }) => {
-      console.log('!!!!! on USER_JOINED ', data);
-      setParticipantsCount(data.countUsers);
+    socket.on('USER_JOINED', ({ game }: { game: IRoomGame }) => {
+      console.log('!!!!! on USER_JOINED ', game);
+      setParticipantsCount(game.onlineUsers.length);
     });
 
-    socket.on('WELCOME_BACK', (data: IGameRestore) => {
-      console.log('!!!!! on WELCOME_BACK ', data);
+    socket.on('WELCOME_BACK', ({ game }: IGameRestore) => {
+      console.log('!!!!! on WELCOME_BACK ', game);
+      const isAllowedSubmit = !game.questionAnsweredBy.includes(user._id);
 
-      setGameStarted(data.game.started);
-      // setCanSubmit(true);
-      setQuestion(data.game.currentQuestion);
+      setGameStarted(game.started);
+      setCanSubmit(isAllowedSubmit);
+      setQuestion(game.currentQuestion);
       setAnswer('');
-      setCurrentQuestionIdx(data.game.questionIdx);
+      setCurrentQuestionIdx(game.questionIdx);
+      setParticipantsCount(game.onlineUsers.length);
     });
 
     socket.on('USER_LEFT', (data: { countUsers: number }) => {
@@ -239,13 +250,21 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         */}
         {isGameHost && currentGame?.password && <HostRoomHeader password={currentGame.password} total={participantsCount} />}
 
-        {!isGameHost && participantsCount}
+        {!isGameHost && <Typography variant="subtitle2">Online: {participantsCount} users</Typography>}
 
         <div>
           {isGameHost && !gameStarted && (
             <Button variant="contained" size="large" onClick={startGame}>
               START QUIZ
             </Button>
+          )}
+        </div>
+        <div>
+          {!isGameHost && !gameStarted && (
+            <Alert severity="success">
+              <AlertTitle>Welcome!</AlertTitle>
+              Please wait for the game to <strong>be started!</strong>
+            </Alert>
           )}
         </div>
         <div>

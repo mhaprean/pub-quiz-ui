@@ -12,13 +12,6 @@ const JoinRoom = ({ joined = false, error = false, onJoin }: IPropsJoinRoom) => 
 
   return (
     <div className="JoinRoom">
-      {joined && (
-        <Alert severity="success">
-          <AlertTitle>Welcome!</AlertTitle>
-          Please wait for the game to <strong>be started!</strong>
-        </Alert>
-      )}
-
       {!joined && (
         <div>
           <Typography variant="subtitle2">Enter room password: </Typography>
@@ -32,7 +25,7 @@ const JoinRoom = ({ joined = false, error = false, onJoin }: IPropsJoinRoom) => 
           </Box>
 
           {error && (
-            <Box sx={{marginTop: '30px'}}>
+            <Box sx={{ marginTop: '30px' }}>
               <Alert severity="error">Please enter the correct password</Alert>
             </Box>
           )}
