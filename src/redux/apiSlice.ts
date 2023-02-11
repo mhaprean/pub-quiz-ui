@@ -45,10 +45,19 @@ interface IGame {
   _id: string;
   title: string;
   active: true;
+  ended: boolean;
   participants: string[];
   // quiz: string;
   host: string;
   results: IResultsUser[];
+}
+
+export interface IMyGame extends Omit<IGame, 'host'> {
+  host: {
+    name: string;
+    email: string;
+    _id: string;
+  };
 }
 
 export interface ISingleGame extends Omit<IGame, 'host'> {
@@ -103,6 +112,11 @@ export const backendApi = createApi({
 
     getGames: builder.query<IGame[], {}>({
       query: () => 'games',
+      providesTags: ['Game'],
+    }),
+
+    getMyGames: builder.query<IMyGame[], {}>({
+      query: () => 'games/mygames',
       providesTags: ['Game'],
     }),
 
@@ -164,6 +178,7 @@ export const {
   useGetCurrentGameQuery,
   useJoinGameMutation,
   useCreateQuizMutation,
+  useGetMyGamesQuery,
 } = backendApi;
 
 export default backendApi;
