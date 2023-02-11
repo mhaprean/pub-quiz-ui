@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
+import { decodeHtml } from '../helpers/decodeHTML';
 import { useGetGamesQuery } from '../redux/apiSlice';
 import { useAppSelector } from '../redux/hooks';
 
@@ -46,12 +47,6 @@ const Rooms = ({ socket }: IPropsRooms) => {
       socket.off('SHOULD_REFETCH_ROOMS');
     };
   }, [refetch]);
-
-  const decodeHtml = (html: string) => {
-    var txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    return txt.value;
-  };
 
   return (
     <StyledRooms className="Rooms">

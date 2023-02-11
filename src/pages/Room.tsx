@@ -254,7 +254,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
           )}
         </div>
         <div>
-          {!isGameHost && !gameStarted && (
+          {!isGameHost && !gameStarted && !currentGame.ended && (
             <Alert severity="success">
               <AlertTitle>Welcome!</AlertTitle>
               Please wait for the game to <strong>be started!</strong>

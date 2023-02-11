@@ -1,6 +1,6 @@
 import { Button, Typography } from '@mui/material';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { decodeHtml } from '../../helpers/decodeHTML';
 import { IQuestion } from '../../redux/apiSlice';
 
 interface IPropsQuizSlide {
@@ -19,12 +19,6 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0,
       return false;
     }
     onPickAnswer(answer);
-  };
-
-  const decodeHtml = (html: string) => {
-    var txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    return txt.value;
   };
 
   return (
