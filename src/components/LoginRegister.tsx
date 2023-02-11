@@ -86,7 +86,6 @@ const LoginRegister = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    event.stopPropagation();
 
     if (tab === 'login') {
       handleLogin();
@@ -101,7 +100,7 @@ const LoginRegister = () => {
         <Tab label="Login" value={'login'} />
         <Tab label="Register" value={'register'} />
       </Tabs>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <div className="form">
           <TextField
             label="Username"
@@ -135,13 +134,13 @@ const LoginRegister = () => {
 
           <div>
             {tab === 'login' && (
-              <Button variant="contained" fullWidth size="large" onClick={handleLogin}>
+              <Button type="submit" variant="contained" fullWidth size="large" onClick={handleLogin}>
                 Login
               </Button>
             )}
 
             {tab === 'register' && (
-              <Button variant="contained" fullWidth size="large" onClick={handleRegister}>
+              <Button type="submit" variant="contained" fullWidth size="large" onClick={handleRegister}>
                 Register
               </Button>
             )}
