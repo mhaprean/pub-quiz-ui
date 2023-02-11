@@ -81,7 +81,7 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<Homepage socket={socket} />} />
-          <Route path="/rooms/:id" element={<RoomPage socket={socket} />} />
+          <Route path="/rooms/:id" element={<RoomPage socket={socket} isConnected={isConnected} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

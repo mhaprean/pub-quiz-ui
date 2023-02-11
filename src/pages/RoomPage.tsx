@@ -8,9 +8,10 @@ import { Socket } from 'socket.io-client';
 
 interface IPropsRoomPage {
   socket: Socket;
+  isConnected: boolean;
 }
 
-const RoomPage = ({ socket }: IPropsRoomPage) => {
+const RoomPage = ({ socket, isConnected }: IPropsRoomPage) => {
   // game id
   const { id } = useParams();
 
@@ -49,6 +50,7 @@ const RoomPage = ({ socket }: IPropsRoomPage) => {
         authState.user &&
         (currentGame.participats.includes(authState.user._id) || currentGame.host._id === authState.user._id) && (
           <Room
+            isConnected={isConnected}
             socket={socket}
             user={authState.user}
             isHost={currentGame.host._id === authState.user._id}

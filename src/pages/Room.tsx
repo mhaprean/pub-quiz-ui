@@ -41,15 +41,29 @@ interface IGameEndedPayload {
   results: IResultsUser[];
 }
 
+interface IQuizGame {
+  currentQuestion: IQuestion;
+  expectedAnswer: string;
+  onlineUsers: string[];
+  questionIdx: number;
+  started: boolean;
+  users: any[];
+}
+
+interface IGameRestore {
+  game: IQuizGame;
+}
+
 interface IPropsRoom {
   socket: Socket;
+  isConnected: boolean;
   user: IUser;
   currentGame: ISingleGame;
   isHost?: boolean;
   onRefetch?: () => void;
 }
 
-const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false }: IPropsRoom) => {
+const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false, isConnected }: IPropsRoom) => {
   const [showResults, setShowResults] = useState(false);
 
   const [users, setUsers] = useState<IResultsUser[]>([]);
@@ -68,10 +82,11 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false 
 
   const isGameHost = isHost;
 
-  const hasMoreQuestions = currentGame && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
+  const hasMoreQuestions = currentGame && isHost && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
 
   useEffect(() => {
     console.log('socket from room: ', socket.id);
+
     const joinData: IJoinRoomPayload = {
       gameId: currentGame._id,
       userId: user._id,
@@ -113,6 +128,16 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false 
       setParticipantsCount(data.countUsers);
     });
 
+    socket.on('WELCOME_BACK', (data: IGameRestore) => {
+      console.log('!!!!! on WELCOME_BACK ', data);
+
+      setGameStarted(data.game.started);
+      // setCanSubmit(true);
+      setQuestion(data.game.currentQuestion);
+      setAnswer('');
+      setCurrentQuestionIdx(data.game.questionIdx);
+    });
+
     socket.on('USER_LEFT', (data: { countUsers: number }) => {
       console.log('!!!!! on USER_LEFT ', data);
       setParticipantsCount(data.countUsers);
@@ -129,7 +154,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false 
       socket.emit('leave_room', joinData);
       console.log('leave room emited');
     };
-  }, []);
+  }, [isConnected]);
 
   /**
    *

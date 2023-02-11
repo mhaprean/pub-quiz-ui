@@ -36,6 +36,7 @@ interface ICreateGameResponse extends IGame {
 }
 
 export interface IResultsUser {
+  id?: string;
   username: string;
   points: string;
 }
