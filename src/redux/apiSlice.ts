@@ -45,7 +45,7 @@ interface IGame {
   _id: string;
   title: string;
   active: true;
-  participats: string[];
+  participants: string[];
   // quiz: string;
   host: string;
   results: IResultsUser[];
