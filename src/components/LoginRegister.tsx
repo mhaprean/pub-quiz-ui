@@ -1,9 +1,10 @@
-import { Button, Tab, Tabs, TextField } from '@mui/material';
+import { Alert, AlertTitle, Button, Tab, Tabs, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import { useLoginUserMutation, useRegisterUserMutation } from '../redux/apiSlice';
 import { login, setUser } from '../redux/authSlice';
 import { useAppDispatch } from '../redux/hooks';
+import Avatars from './Avatars';
 
 const StyledLoginRegister = styled('div')`
   .login-tabs {
@@ -130,7 +131,14 @@ const LoginRegister = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <div>{error}</div>
+          {tab === 'register' && <Avatars />}
+
+          {error && (
+            <Alert severity="error" sx={{ marginTop: '20px' }}>
+              <AlertTitle>Error!</AlertTitle>
+              {error}
+            </Alert>
+          )}
 
           <div>
             {tab === 'login' && (
