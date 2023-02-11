@@ -8,17 +8,16 @@ interface IPropsQuizSlide {
   onPickAnswer: (answer: string) => void;
   pickable?: boolean;
   questionIndex?: number;
+  answer: string;
 }
 
-const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0 }: IPropsQuizSlide) => {
+const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0, answer }: IPropsQuizSlide) => {
   const options = ['A.', 'B.', 'C.', 'D.'];
-  const [selected, setSelected] = useState('');
 
   const handlePickAnswer = (answer: string) => {
     if (!pickable) {
       return false;
     }
-    setSelected(answer);
     onPickAnswer(answer);
   };
 
@@ -31,16 +30,16 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0 
   return (
     <div className="quiz-slide">
       <div className="question">
-        <Typography variant='h5'>
+        <Typography variant="h5">
           {`${questionIndex + 1}. `}
           {decodeHtml(question.question)}
         </Typography>
       </div>
 
       <div className="answers">
-        {question.answers.map((answer, idx) => (
-          <div key={idx} className={classNames('answer', { isSelected: selected === answer })} onClick={() => handlePickAnswer(answer)}>
-            {options[idx]} {decodeHtml(answer)}
+        {question.answers.map((ans, idx) => (
+          <div key={idx} className={classNames('answer', { isSelected: ans === answer })} onClick={() => handlePickAnswer(ans)}>
+            {options[idx]} {decodeHtml(ans)}
           </div>
         ))}
       </div>

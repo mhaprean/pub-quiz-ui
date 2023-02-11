@@ -209,10 +209,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     }
   };
 
-  const handleChooseAnswer = (ans: string) => {
-    setAnswer(ans);
-  };
-
   const onSubmitAnswer = () => {
     if (user) {
       const submitAnswerPayload: ISubmitAnswerPayload = {
@@ -243,7 +239,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
   return (
     <div className="RoomPage">
       <div className="container">
-
         {/* This is for the room host.
           Alaways display the room password and the total number of users. 
         */}
@@ -269,8 +264,9 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         <div>
           {gameStarted && question && !showResults && (
             <QuizSlide
+              answer={answer}
               question={question}
-              onPickAnswer={handleChooseAnswer}
+              onPickAnswer={setAnswer}
               pickable={!isGameHost && canSubmit}
               questionIndex={currentQuestionIdx}
             />

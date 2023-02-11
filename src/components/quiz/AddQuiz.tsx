@@ -107,16 +107,18 @@ const AddQuiz = () => {
     try {
       const json = JSON.parse(jsonString);
 
-      const res = json.questions.map((q: { question: string; correct_answer: string; incorrect_answers: string[]; id: string }) => {
-        let answers = [q.correct_answer, ...q.incorrect_answers];
+      const res: IQuizQuestion[] = json.questions.map(
+        (q: { question: string; correct_answer: string; incorrect_answers: string[]; id: string }) => {
+          let answers = [q.correct_answer, ...q.incorrect_answers];
 
-        let shuffled = answers
-          .map((value) => ({ value, sort: Math.random() }))
-          .sort((a, b) => a.sort - b.sort)
-          .map(({ value }) => value);
+          let shuffled = answers
+            .map((value) => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value);
 
-        return { question: q.question, answers: shuffled, correct_answer: q.correct_answer, id: getId() };
-      });
+          return { question: q.question, answers: shuffled, correct_answer: q.correct_answer, id: getId() };
+        }
+      );
 
       return res;
     } catch (error) {
