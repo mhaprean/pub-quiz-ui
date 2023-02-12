@@ -3,8 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Homepage from './pages/Homepage';
 import NotFoundPage from './pages/NotFoundPage';
-import Room from './pages/Room';
-import { useAppSelector } from './redux/hooks';
 import RoomPage from './pages/RoomPage';
 
 import * as io from 'socket.io-client';
@@ -12,6 +10,7 @@ import { Socket } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import MyGames from './pages/MyGames';
 import CreateQuiz from './pages/CreateQuiz';
+import FaqPage from './pages/FaqPage';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
@@ -85,6 +84,7 @@ function App() {
           <Route path="/" element={<Homepage socket={socket} />} />
           <Route path="/games" element={<MyGames />} />
           <Route path="/quiz/create" element={<CreateQuiz />} />
+          <Route path="/faq" element={<FaqPage />} />
 
           <Route path="/rooms/:id" element={<RoomPage socket={socket} isConnected={isConnected} />} />
           <Route path="*" element={<NotFoundPage />} />

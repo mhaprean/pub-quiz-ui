@@ -1,4 +1,4 @@
-import { Logout, Quiz as QuizIcon, Create as CreateIcon } from '@mui/icons-material';
+import { Logout, Quiz as QuizIcon, Create as CreateIcon, LiveHelp as LiveHelpIcon } from '@mui/icons-material';
 
 import { Avatar, Box, IconButton, ListItemIcon, Menu, MenuItem, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -60,7 +60,7 @@ const Navigation = () => {
     if (profile) {
       dispatch(setUser(profile));
     }
-  }, [profile])
+  }, [profile]);
 
   return (
     <StyledNavigation className="Navigation">
@@ -137,6 +137,15 @@ const Navigation = () => {
             </MenuItem>
           </Link>
         )}
+
+        <Link to={'/faq'}>
+          <MenuItem>
+            <ListItemIcon>
+              <LiveHelpIcon fontSize="small" />
+            </ListItemIcon>
+            F.A.Q.
+          </MenuItem>
+        </Link>
 
         <Link to={'/games'}>
           <MenuItem>
