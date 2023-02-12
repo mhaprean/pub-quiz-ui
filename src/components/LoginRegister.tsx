@@ -2,7 +2,7 @@ import { Alert, AlertTitle, Button, Tab, Tabs, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import { useLoginUserMutation, useRegisterUserMutation } from '../redux/apiSlice';
-import { login, setUser } from '../redux/authSlice';
+import { IUser, login, setUser } from '../redux/authSlice';
 import { useAppDispatch } from '../redux/hooks';
 import Avatars from './Avatars';
 
@@ -27,6 +27,7 @@ const LoginRegister = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [image, setImage] = useState('');
 
   const [error, setError] = useState('');
 
@@ -67,13 +68,14 @@ const LoginRegister = () => {
       return null;
     }
 
-    try {
-      const newUser = {
-        name: username,
-        email,
-        password,
-      };
+    const newUser: Partial<IUser> = {
+      name: username,
+      email,
+      password,
+      image,
+    };
 
+    try {
       const res = await registerBackend({ data: newUser }).unwrap();
 
       if (res && res.user && res.access_token) {
@@ -107,6 +109,7 @@ const LoginRegister = () => {
             label="Username"
             variant="outlined"
             autoComplete="off"
+            required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -117,6 +120,7 @@ const LoginRegister = () => {
               variant="outlined"
               type={'email'}
               autoComplete="off"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -128,10 +132,11 @@ const LoginRegister = () => {
             type={'password'}
             autoComplete="off"
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          {tab === 'register' && <Avatars />}
+          {tab === 'register' && <Avatars selected={image} onSelect={setImage} />}
 
           {error && (
             <Alert severity="error" sx={{ marginTop: '20px' }}>

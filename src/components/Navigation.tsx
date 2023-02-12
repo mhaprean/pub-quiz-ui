@@ -8,6 +8,8 @@ import { useGetMyProfileQuery } from '../redux/apiSlice';
 import { logout } from '../redux/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
+const BASE_URL = import.meta.env.BASE_URL;
+
 const StyledNavigation = styled('div')`
   .container {
     display: flex;
@@ -77,7 +79,7 @@ const Navigation = () => {
               aria-expanded={open ? 'true' : undefined}
             >
               <Avatar sx={{ width: 32, height: 32 }}>
-                <img src="./avatars/w3.png" width={'32px'} height={'32px'} />
+                <img src={BASE_URL + authState.user?.image} width={'32px'} height={'32px'} />
               </Avatar>
             </IconButton>
           </>
