@@ -25,8 +25,6 @@ const ConfirmAccountPage = () => {
 
   return (
     <div className="container">
-      <NavigateBack />
-
       {response && response.isSuccess && (
         <Alert severity="success">
           <AlertTitle>Welcome!</AlertTitle>

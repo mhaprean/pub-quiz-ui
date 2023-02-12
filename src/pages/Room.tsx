@@ -9,6 +9,7 @@ import { Socket } from 'socket.io-client';
 import QuizResults from '../components/quiz/QuizResults';
 import HostRoomHeader from '../components/game/HostRoomHeader';
 import { IUser } from '../redux/authSlice';
+import { Link } from 'react-router-dom';
 
 interface IRoomUser {
   id: string;
@@ -242,27 +243,31 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         {/* This is for the room host.
           Alaways display the room password and the total number of users. 
         */}
-        {isGameHost && currentGame?.password && <HostRoomHeader password={currentGame.password} total={participantsCount} />}
+        {isGameHost && currentGame?.password && !currentGame?.ended && (
+          <HostRoomHeader password={currentGame.password} total={participantsCount} />
+        )}
 
-        {!isGameHost && <Typography variant="subtitle2">Online: {participantsCount} users</Typography>}
+        {!isGameHost && !currentGame?.ended && <Typography variant="subtitle2">Online: {participantsCount} users</Typography>}
 
-        <div>
-          {isGameHost && !gameStarted && (
+        {isGameHost && !gameStarted && !currentGame?.ended && (
+          <div>
             <Button variant="contained" size="large" onClick={startGame}>
               START QUIZ
             </Button>
-          )}
-        </div>
-        <div>
-          {!isGameHost && !gameStarted && !currentGame.ended && (
+          </div>
+        )}
+
+        {!isGameHost && !gameStarted && !currentGame.ended && (
+          <div>
             <Alert severity="success">
               <AlertTitle>Welcome!</AlertTitle>
               Please wait for the game to <strong>be started!</strong>
             </Alert>
-          )}
-        </div>
-        <div>
-          {gameStarted && question && !showResults && (
+          </div>
+        )}
+
+        {gameStarted && question && !showResults && (
+          <div>
             <QuizSlide
               answer={answer}
               question={question}
@@ -270,10 +275,14 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
               pickable={!isGameHost && canSubmit}
               questionIndex={currentQuestionIdx}
             />
-          )}
-        </div>
+          </div>
+        )}
 
-        <div>{showResults && <QuizResults users={users.length > 0 ? users : currentGame?.results || []} />}</div>
+        {(showResults || currentGame?.ended) && (
+          <div>
+            <QuizResults users={users.length > 0 ? users : currentGame?.results || []} />
+          </div>
+        )}
 
         <Box className="submit-button" sx={{ marginTop: '30px', display: 'flex' }}>
           {isGameHost && gameStarted && hasMoreQuestions && (
@@ -282,7 +291,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
             </Button>
           )}
 
-          {isGameHost && gameStarted && !hasMoreQuestions && (
+          {isGameHost && gameStarted && !hasMoreQuestions && !currentGame?.ended && (
             <Button variant="contained" size="large" onClick={getQuizResults} sx={{ marginLeft: 'auto' }}>
               GET QUIZ RESULTS
             </Button>
@@ -292,6 +301,14 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
             <Button variant="contained" size="large" onClick={onSubmitAnswer} sx={{ marginLeft: 'auto' }} disabled={!canSubmit || !answer}>
               SUBMIT ANSWER
             </Button>
+          )}
+
+          {currentGame.ended && (
+            <Link to="/">
+              <Button variant="contained" size="large">
+                Return to homepage
+              </Button>
+            </Link>
           )}
         </Box>
       </div>
