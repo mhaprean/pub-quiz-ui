@@ -85,6 +85,8 @@ export interface IQuizQuestion {
 
 interface ICreateQuizResponse {}
 
+interface IConfirmAccountResponse {}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 export const backendApi = createApi({
@@ -146,6 +148,14 @@ export const backendApi = createApi({
       }),
     }),
 
+    confirmAccount: builder.mutation<IConfirmAccountResponse, { userId: string; token: string }>({
+      query: (data) => ({
+        url: 'auth/confirm',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+
     createQuiz: builder.mutation<ICreateQuizResponse, { title: string; category: string; difficulty: string; questions: IQuizQuestion[] }>({
       query: (data) => ({
         url: 'quiz/create',
@@ -186,6 +196,7 @@ export const {
   useGetMyGamesQuery,
   useGetQuizesQuery,
   useGetMyQuizesQuery,
+  useConfirmAccountMutation,
 } = backendApi;
 
 export default backendApi;

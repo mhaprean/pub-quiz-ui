@@ -24,7 +24,7 @@ const QuizResults = ({ users }: IPropsGameResults) => {
     <StyledQuizResults className="QuizResults">
       <Typography variant="h6">QUIZ RESULTS:</Typography>
       {users.map((user, idx) => (
-        <Box className="quiz-player" key={idx} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box className="quiz-player" key={user.id || idx} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="subtitle1">
             {`${idx + 1}. `} {user.username}
           </Typography>

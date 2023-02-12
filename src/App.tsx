@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import MyGames from './pages/MyGames';
 import CreateQuiz from './pages/CreateQuiz';
 import FaqPage from './pages/FaqPage';
+import ConfirmAccountPage from './pages/ConfirmAccountPage';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
@@ -85,6 +86,7 @@ function App() {
           <Route path="/games" element={<MyGames />} />
           <Route path="/quiz/create" element={<CreateQuiz />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/confirm/:id/:token" element={<ConfirmAccountPage />} />
 
           <Route path="/rooms/:id" element={<RoomPage socket={socket} isConnected={isConnected} />} />
           <Route path="*" element={<NotFoundPage />} />

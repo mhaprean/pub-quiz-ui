@@ -55,7 +55,7 @@ const Rooms = ({ socket }: IPropsRooms) => {
       {!isLoading &&
         games &&
         games.map((game, idx) => (
-          <div className="room" key={idx}>
+          <div className="room" key={game._id}>
             <div className="room-name">
               <Typography className="room-name" variant="h6">
                 {decodeHtml(game.title)}
@@ -63,7 +63,6 @@ const Rooms = ({ socket }: IPropsRooms) => {
             </div>
 
             <Link to={`/rooms/${game._id}`}>
-              
               {authState.user?._id === game.host ? (
                 <Button variant="contained" size="large" className="room-button" color="secondary">
                   Host room

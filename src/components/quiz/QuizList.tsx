@@ -12,7 +12,7 @@ const QuizList = ({ quizes, selectedQuiz, onSelectQuiz }: IPropsQuizList) => {
   return (
     <List dense={true} sx={{ maxHeight: '280px', overflow: 'auto' }}>
       {quizes.map((quiz, idx) => (
-        <QuizItem quiz={quiz} key={idx} selected={quiz._id === selectedQuiz} onSelect={onSelectQuiz} />
+        <QuizItem quiz={quiz} key={quiz._id} selected={quiz._id === selectedQuiz} onSelect={onSelectQuiz} />
       ))}
     </List>
   );
