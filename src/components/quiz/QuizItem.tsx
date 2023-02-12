@@ -39,7 +39,7 @@ const QuizItem = ({ quiz, selected = false, onSelect = () => {} }: IPropsQuizIte
           <OfflineBoltIcon />
         </Avatar>
       </ListItemAvatar>
-      <ListItemText primary={quiz.title} secondary={'difficulty: ' + quiz.difficulty} />
+      <ListItemText primary={quiz.title} secondary={'difficulty: ' + quiz.difficulty + ' / ' + quiz.total + ' questions'} />
     </StyledQuizItem>
   );
 };

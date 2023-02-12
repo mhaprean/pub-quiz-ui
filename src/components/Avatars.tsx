@@ -49,7 +49,6 @@ const Avatars = ({ selected, onSelect }: IPropsAvatars) => {
             </div>
           );
         })}
-      {selected}
     </StyledAvatars>
   );
 };

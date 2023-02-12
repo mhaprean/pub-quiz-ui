@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGetMyProfileQuery } from '../redux/apiSlice';
-import { logout } from '../redux/authSlice';
+import { logout, setUser } from '../redux/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 const BASE_URL = import.meta.env.BASE_URL;
@@ -55,6 +55,12 @@ const Navigation = () => {
       dispatch(logout());
     }
   }, [isError]);
+
+  useEffect(() => {
+    if (profile) {
+      dispatch(setUser(profile));
+    }
+  }, [profile])
 
   return (
     <StyledNavigation className="Navigation">
@@ -121,14 +127,16 @@ const Navigation = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Link to={'/quiz/create'}>
-          <MenuItem>
-            <ListItemIcon>
-              <CreateIcon fontSize="small" />
-            </ListItemIcon>
-            Create Quiz
-          </MenuItem>
-        </Link>
+        {authState.user?.role === 'host' && (
+          <Link to={'/quiz/create'}>
+            <MenuItem>
+              <ListItemIcon>
+                <CreateIcon fontSize="small" />
+              </ListItemIcon>
+              Create Quiz
+            </MenuItem>
+          </Link>
+        )}
 
         <Link to={'/games'}>
           <MenuItem>

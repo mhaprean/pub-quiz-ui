@@ -27,6 +27,7 @@ export interface IQuiz {
   category: string;
   createdAt: string;
   updatedAt: string;
+  total: number;
 
   questions: IQuestion[];
 }
@@ -106,7 +107,12 @@ export const backendApi = createApi({
       query: () => 'auth/profile',
     }),
     getQuizes: builder.query<IQuiz[], {}>({
-      query: () => 'quiz',
+      query: () => 'quiz/all',
+      providesTags: ['Quiz'],
+    }),
+
+    getMyQuizes: builder.query<IQuiz[], {}>({
+      query: () => 'quiz/myquizes',
       providesTags: ['Quiz'],
     }),
 
@@ -155,7 +161,7 @@ export const backendApi = createApi({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Quiz'],
+      invalidatesTags: ['Quiz', 'Game'],
     }),
 
     joinGame: builder.mutation<IJoinGameResponse, { gameId: string; password: string }>({
@@ -172,13 +178,14 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useGetMyProfileQuery,
-  useGetQuizesQuery,
   useCreateGameMutation,
   useGetGamesQuery,
   useGetCurrentGameQuery,
   useJoinGameMutation,
   useCreateQuizMutation,
   useGetMyGamesQuery,
+  useGetQuizesQuery,
+  useGetMyQuizesQuery,
 } = backendApi;
 
 export default backendApi;

@@ -160,6 +160,12 @@ const AddQuiz = () => {
 
   return (
     <StyledAddQuiz className="AddQuiz">
+      {isSuccess && (
+        <Alert severity="success">
+          <AlertTitle>Success!</AlertTitle>
+          Quiz was succesfuly <strong>created!</strong>
+        </Alert>
+      )}
       <TextField helperText="" label="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
       <TextField helperText="" label="Category" value={category} onChange={(e) => setCategory(e.target.value)} />
 

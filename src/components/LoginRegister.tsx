@@ -27,7 +27,7 @@ const LoginRegister = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState('avatars/64_1.png');
 
   const [error, setError] = useState('');
 

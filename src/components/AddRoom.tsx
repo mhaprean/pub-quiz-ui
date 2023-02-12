@@ -27,7 +27,7 @@ import React from 'react';
 import { useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
-import { useCreateGameMutation, useGetQuizesQuery } from '../redux/apiSlice';
+import { useCreateGameMutation, useGetMyQuizesQuery, useGetQuizesQuery } from '../redux/apiSlice';
 import QuizList from './quiz/QuizList';
 import { useNavigate } from 'react-router-dom';
 
@@ -103,7 +103,8 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
     }
   };
 
-  const { data: quizes, isFetching } = useGetQuizesQuery({});
+  const { data: quizes, isFetching } = useGetQuizesQuery({}, { skip: tab === 'myquizes' });
+  const { data: myQuizes, isFetching: isMyQuizesFetching } = useGetMyQuizesQuery({});
 
   return (
     <div className="AddRoom">
@@ -147,8 +148,8 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
                 <Tab label="Default quizes" value={'default'} />
               </Tabs>
             </Box>
-
-            <QuizList quizes={quizes || []} selectedQuiz={selectedQuiz} onSelectQuiz={setSelectedQuiz} />
+            {tab === 'myquizes' && <QuizList quizes={myQuizes || []} selectedQuiz={selectedQuiz} onSelectQuiz={setSelectedQuiz} />}
+            {tab === 'default' && <QuizList quizes={quizes || []} selectedQuiz={selectedQuiz} onSelectQuiz={setSelectedQuiz} />}
           </div>
           <div>
             <Button

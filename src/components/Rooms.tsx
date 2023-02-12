@@ -63,9 +63,16 @@ const Rooms = ({ socket }: IPropsRooms) => {
             </div>
 
             <Link to={`/rooms/${game._id}`}>
-              <Button variant="contained" size="large" className="room-button">
-                {authState.user?._id === game.host ? 'Host room' : 'Join room'}
-              </Button>
+              
+              {authState.user?._id === game.host ? (
+                <Button variant="contained" size="large" className="room-button" color="secondary">
+                  Host room
+                </Button>
+              ) : (
+                <Button variant="contained" size="large" className="room-button">
+                  Join room
+                </Button>
+              )}
             </Link>
           </div>
         ))}
