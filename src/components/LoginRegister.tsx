@@ -39,6 +39,23 @@ const LoginRegister = () => {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
+    setError('');
+  };
+
+  const validateUsername = (name: string) => {
+    const alphanumericRegex = /^[a-zA-Z][a-zA-Z0-9 ]*[a-zA-Z0-9]$/;
+    if (!alphanumericRegex.test(name)) {
+      return 'Username must start with a letter and can only contain alphanumeric characters.';
+    }
+    return '';
+  };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Email is not valid';
+    }
+    return '';
   };
 
   const handleLogin = async () => {
@@ -64,6 +81,20 @@ const LoginRegister = () => {
   };
 
   const handleRegister = async () => {
+    const errorUsername = validateUsername(username);
+
+    if (errorUsername) {
+      setError(errorUsername);
+      return null;
+    }
+
+    const errorEmail = validateEmail(email);
+
+    if (errorEmail) {
+      setError(errorEmail);
+      return null;
+    }
+
     if (isRegisterLoading || isSuccessRegister) {
       return null;
     }

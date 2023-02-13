@@ -9,15 +9,14 @@ const StyledAvatars = styled('div')`
   justify-content: center;
   margin: 10px 0;
   flex-wrap: wrap;
-  gap: 5px;
 
   img {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
   }
 
   .avatar {
-    padding: 5px;
+    padding: 3px;
     display: flex;
     align-items: center;
     justify-content: center;

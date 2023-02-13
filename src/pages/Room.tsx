@@ -297,7 +297,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
             </Button>
           )}
 
-          {!isGameHost && gameStarted && (
+          {!isGameHost && gameStarted && !currentGame?.ended && (
             <Button variant="contained" size="large" onClick={onSubmitAnswer} sx={{ marginLeft: 'auto' }} disabled={!canSubmit || !answer}>
               SUBMIT ANSWER
             </Button>
