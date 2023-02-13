@@ -4,6 +4,7 @@ import { IResultsUser } from '../../redux/apiSlice';
 
 interface IPropsGameResults {
   users: IResultsUser[];
+  total: number;
 }
 
 const StyledQuizResults = styled('div')`
@@ -19,7 +20,7 @@ const StyledQuizResults = styled('div')`
   }
 `;
 
-const QuizResults = ({ users }: IPropsGameResults) => {
+const QuizResults = ({ users, total }: IPropsGameResults) => {
   return (
     <StyledQuizResults className="QuizResults">
       <Typography variant="h6">QUIZ RESULTS:</Typography>
@@ -28,7 +29,7 @@ const QuizResults = ({ users }: IPropsGameResults) => {
           <Typography variant="subtitle1">
             {`${idx + 1}. `} {user.username}
           </Typography>
-          <Typography variant="subtitle1">{user.points}</Typography>
+          <Typography variant="subtitle1">{user.points} / {total}</Typography>
         </Box>
       ))}
     </StyledQuizResults>

@@ -280,7 +280,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
 
         {(showResults || currentGame?.ended) && (
           <div>
-            <QuizResults users={users.length > 0 ? users : currentGame?.results || []} />
+            <QuizResults users={users.length > 0 ? users : currentGame?.results || []} total={currentGame.quiz.total} />
           </div>
         )}
 

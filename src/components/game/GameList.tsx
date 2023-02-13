@@ -2,6 +2,7 @@ import { Avatar, Button, Chip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { decodeHtml } from '../../helpers/decodeHTML';
+import { formatDate } from '../../helpers/formatDate';
 import { IMyGame } from '../../redux/apiSlice';
 
 interface IPropsGameList {
@@ -38,6 +39,13 @@ const StyledGameList = styled('div')`
       margin-right: 10px;
     }
   }
+  .info {
+    margin: 10px 0;
+
+    .MuiChip-root {
+      margin-right: 10px;
+    }
+  }
 `;
 
 const GameList = ({ games, asHost = false }: IPropsGameList) => {
@@ -56,6 +64,11 @@ const GameList = ({ games, asHost = false }: IPropsGameList) => {
               Host:
             </Typography>
             <Chip size="small" avatar={<Avatar alt="" src={game.host.image} />} label={game.host.name} variant="outlined" />
+          </div>
+
+          <div className="info">
+            <Chip label={`${game.quiz.total} questions`} size="small" variant="outlined" />
+            <Chip label={formatDate(game.createdAt)} size="small" variant="outlined" />
           </div>
 
           <div className="game-participants">

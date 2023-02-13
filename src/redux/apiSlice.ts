@@ -51,6 +51,12 @@ interface IGame {
   // quiz: string;
   host: string;
   results: IResultsUser[];
+  quiz: {
+    _id: string;
+    total: number;
+  };
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IMyGame extends Omit<IGame, 'host'> {
