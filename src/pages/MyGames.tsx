@@ -1,10 +1,20 @@
 import GameList from '../components/game/GameList';
-import { useGetMyGamesQuery } from '../redux/apiSlice';
+import { useGetMyGamesAsHostQuery, useGetMyGamesQuery } from '../redux/apiSlice';
+import { useAppSelector } from '../redux/hooks';
 
 const MyGames = () => {
+  const authState = useAppSelector((state) => state.auth);
+
   const { data: games, isLoading } = useGetMyGamesQuery({});
 
-  return <div className="container">{!isLoading && games && <GameList games={games} />}</div>;
+  const { data: gamesAsHost, isLoading: isGamesAsHostLoading } = useGetMyGamesAsHostQuery({}, { skip: authState.user?.role !== 'host' });
+
+  return (
+    <div className="container">
+      {!isLoading && games && <GameList games={games} />}
+      {!isGamesAsHostLoading && gamesAsHost && <GameList games={gamesAsHost} asHost />}
+    </div>
+  );
 };
 
 export default MyGames;

@@ -58,6 +58,7 @@ export interface IMyGame extends Omit<IGame, 'host'> {
     name: string;
     email: string;
     _id: string;
+    image: string;
   };
 }
 
@@ -125,6 +126,11 @@ export const backendApi = createApi({
 
     getMyGames: builder.query<IMyGame[], {}>({
       query: () => 'games/mygames',
+      providesTags: ['Game'],
+    }),
+
+    getMyGamesAsHost: builder.query<IMyGame[], {}>({
+      query: () => 'games/hostedbyme',
       providesTags: ['Game'],
     }),
 
@@ -197,6 +203,7 @@ export const {
   useGetQuizesQuery,
   useGetMyQuizesQuery,
   useConfirmAccountMutation,
+  useGetMyGamesAsHostQuery,
 } = backendApi;
 
 export default backendApi;
