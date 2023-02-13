@@ -98,9 +98,7 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
 
       onRoomCreated();
       navigate(`/rooms/${res._id}`);
-    } catch (error) {
-      console.log('handleCreateGame error: ', error);
-    }
+    } catch (error) {}
   };
 
   const { data: quizes, isFetching } = useGetQuizesQuery({}, { skip: tab === 'myquizes' });

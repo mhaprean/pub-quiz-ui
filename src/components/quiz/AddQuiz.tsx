@@ -133,7 +133,6 @@ const AddQuiz = () => {
       const validated = validateQuiz(json);
 
       setError(validated);
-      console.log('Valid JSON: ', json);
       return validated === '';
     } catch (error) {
       setError('Invalid JSON object.');
@@ -151,8 +150,6 @@ const AddQuiz = () => {
 
     if (isValid) {
       const questions = transformQuestions(value);
-
-      console.log('!!! handle create quiz ', questions);
 
       const createdQuiz = await createQuiz({ category: category, difficulty: difficulty, title: title, questions: questions }).unwrap();
     }

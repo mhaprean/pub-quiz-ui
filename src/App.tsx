@@ -52,12 +52,12 @@ function App() {
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
-      console.log('Connected to the server');
+
       setIsConnected(true);
     });
 
     newSocket.on('disconnect', () => {
-      console.log('Disconnected from the server');
+
       setIsConnected(false);
     });
 
@@ -71,7 +71,6 @@ function App() {
   useEffect(() => {
     if (!isConnected) {
       setTimeout(() => {
-        console.log('Attempting to reconnect to the server');
         socket!.connect();
       }, 2000);
     }

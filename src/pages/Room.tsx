@@ -95,7 +95,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
   const hasMoreQuestions = currentGame && isHost && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
 
   useEffect(() => {
-    console.log('socket from room: ', socket.id);
 
     const joinData: IJoinRoomPayload = {
       gameId: currentGame._id,
@@ -105,10 +104,8 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     };
     socket.emit('join_room', joinData);
 
-    console.log('join_room emited');
 
     socket.on('QUIZ_STARTED', (data: IStartGamePayload) => {
-      console.log('!!!!! on QUIZ_STARTED ', data);
 
       setGameStarted(true);
       setCanSubmit(true);
@@ -117,7 +114,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     });
 
     socket.on('NEXT_QUESTION', (data: INextQuestionPayload) => {
-      console.log('!!!!! on NEXT_QUESTION ', data);
 
       setGameStarted(true);
       setCanSubmit(true);
@@ -127,19 +123,19 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     });
 
     socket.on('QUIZ_ENDED', (data: IGameEndedPayload) => {
-      console.log('!!! on QUIZ_ENDED ', data);
+
       setUsers(data.results);
       setShowResults(true);
       onRefetch();
     });
 
     socket.on('USER_JOINED', ({ game }: { game: IRoomGame }) => {
-      console.log('!!!!! on USER_JOINED ', game);
+
       setParticipantsCount(game.onlineUsers.length);
     });
 
     socket.on('WELCOME_BACK', ({ game }: IGameRestore) => {
-      console.log('!!!!! on WELCOME_BACK ', game);
+
       const isAllowedSubmit = !game.questionAnsweredBy.includes(user._id);
 
       setGameStarted(game.started);
@@ -151,7 +147,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     });
 
     socket.on('USER_LEFT', (data: { countUsers: number }) => {
-      console.log('!!!!! on USER_LEFT ', data);
+
       setParticipantsCount(data.countUsers);
     });
 
@@ -164,7 +160,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       socket.off('join_room');
 
       socket.emit('leave_room', joinData);
-      console.log('leave room emited');
+
     };
   }, [isConnected]);
 
