@@ -22,9 +22,9 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0,
   };
 
   return (
-    <div className="quiz-slide">
+    <div className="QuizSlide">
       <div className="question">
-        <Typography variant="h5">
+        <Typography variant="h4">
           {`${questionIndex + 1}. `}
           {decodeHtml(question.question)}
         </Typography>
@@ -33,7 +33,9 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0,
       <div className="answers">
         {question.answers.map((ans, idx) => (
           <div key={idx} className={classNames('answer', { isSelected: ans === answer })} onClick={() => handlePickAnswer(ans)}>
-            {options[idx]} {decodeHtml(ans)}
+            <Typography variant="h5">
+              {options[idx]} {decodeHtml(ans)}
+            </Typography>
           </div>
         ))}
       </div>

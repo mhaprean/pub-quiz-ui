@@ -10,6 +10,7 @@ import QuizResults from '../components/quiz/QuizResults';
 import HostRoomHeader from '../components/game/HostRoomHeader';
 import { IUser } from '../redux/authSlice';
 import { Link } from 'react-router-dom';
+import EndedQuiz from '../components/quiz/EndedQuiz';
 
 interface IRoomUser {
   id: string;
@@ -95,7 +96,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
   const hasMoreQuestions = currentGame && isHost && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
 
   useEffect(() => {
-
     const joinData: IJoinRoomPayload = {
       gameId: currentGame._id,
       userId: user._id,
@@ -104,9 +104,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     };
     socket.emit('join_room', joinData);
 
-
     socket.on('QUIZ_STARTED', (data: IStartGamePayload) => {
-
       setGameStarted(true);
       setCanSubmit(true);
       setQuestion(data.question);
@@ -114,7 +112,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     });
 
     socket.on('NEXT_QUESTION', (data: INextQuestionPayload) => {
-
       setGameStarted(true);
       setCanSubmit(true);
       setQuestion(data.question);
@@ -123,19 +120,16 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     });
 
     socket.on('QUIZ_ENDED', (data: IGameEndedPayload) => {
-
       setUsers(data.results);
       setShowResults(true);
       onRefetch();
     });
 
     socket.on('USER_JOINED', ({ game }: { game: IRoomGame }) => {
-
       setParticipantsCount(game.onlineUsers.length);
     });
 
     socket.on('WELCOME_BACK', ({ game }: IGameRestore) => {
-
       const isAllowedSubmit = !game.questionAnsweredBy.includes(user._id);
 
       setGameStarted(game.started);
@@ -147,7 +141,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     });
 
     socket.on('USER_LEFT', (data: { countUsers: number }) => {
-
       setParticipantsCount(data.countUsers);
     });
 
@@ -160,7 +153,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       socket.off('join_room');
 
       socket.emit('leave_room', joinData);
-
     };
   }, [isConnected]);
 
@@ -278,6 +270,10 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
           <div>
             <QuizResults users={users.length > 0 ? users : currentGame?.results || []} total={currentGame.quiz.total} />
           </div>
+        )}
+
+        {currentGame?.ended && currentGame?.quiz.questions && currentGame?.quiz.questions.length > 0 && (
+          <EndedQuiz questions={currentGame.quiz.questions} />
         )}
 
         <Box className="submit-button" sx={{ marginTop: '30px', display: 'flex' }}>
