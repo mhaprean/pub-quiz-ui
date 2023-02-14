@@ -51,7 +51,7 @@ a {
 .container {
   margin: 0 auto;
   width: 100%;
-  max-width: 500px;
+  max-width: 1000px;
   padding: 10px;
 }
 
@@ -68,11 +68,12 @@ a {
 .answer {
   border-radius: 10px;
   border: 2px solid var(--input-border-color);
-  flex: 100%;
   margin: 5px;
   padding: 10px;
   cursor: pointer;
   background: var(--background-paper);
+  flex-grow: 1;
+  flex-basis: 100%;
 
   &:hover {
     border-color: var(--primary-color);
@@ -80,5 +81,10 @@ a {
   &.isSelected {
     background: var(--border-color);
     border-color: var(--primary-color);
+  }
+
+  @media screen and (min-width: 800px) {
+    flex-basis: 45%;
+
   }
 }

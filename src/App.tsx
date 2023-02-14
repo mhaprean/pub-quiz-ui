@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Homepage from './pages/Homepage';
@@ -52,12 +52,10 @@ function App() {
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
-
       setIsConnected(true);
     });
 
     newSocket.on('disconnect', () => {
-
       setIsConnected(false);
     });
 
@@ -77,7 +75,7 @@ function App() {
   }, [isConnected, socket]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={responsiveFontSizes(theme)}>
       <div className="App dark">
         <Navigation />
         <Routes>

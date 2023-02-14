@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import GameList from '../components/game/GameList';
 import { useGetMyGamesAsHostQuery, useGetMyGamesQuery } from '../redux/apiSlice';
 import { useAppSelector } from '../redux/hooks';
@@ -11,6 +12,7 @@ const MyGames = () => {
 
   return (
     <div className="container">
+      {isLoading && <CircularProgress />}
       {!isLoading && games && <GameList games={games} />}
       {!isGamesAsHostLoading && gamesAsHost && <GameList games={gamesAsHost} asHost />}
     </div>

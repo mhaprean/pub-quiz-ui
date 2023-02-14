@@ -5,6 +5,7 @@ import { useGetCurrentGameQuery, useJoinGameMutation } from '../redux/apiSlice';
 import { useAppSelector } from '../redux/hooks';
 import Room from './Room';
 import { Socket } from 'socket.io-client';
+import { CircularProgress } from '@mui/material';
 
 interface IPropsRoomPage {
   socket: Socket;
@@ -41,6 +42,7 @@ const RoomPage = ({ socket, isConnected }: IPropsRoomPage) => {
 
   return (
     <div className="container">
+      {isLoading && <CircularProgress />}
       {currentGame &&
         authState.user &&
         !currentGame.participants.includes(authState.user._id) &&

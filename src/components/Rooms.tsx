@@ -1,4 +1,4 @@
-import { Button, Typography } from '@mui/material';
+import { Button, CircularProgress, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -50,6 +50,8 @@ const Rooms = ({ socket }: IPropsRooms) => {
   return (
     <StyledRooms className="Rooms">
       <h3>Rooms</h3>
+
+      {isLoading && <CircularProgress />}
 
       {!isLoading &&
         games &&
