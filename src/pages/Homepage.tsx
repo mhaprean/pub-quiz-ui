@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Socket } from 'socket.io-client';
 import AddRoom from '../components/AddRoom';
 import LoginRegister from '../components/LoginRegister';
@@ -13,11 +13,13 @@ const Homepage = ({ socket }: IPropsHompage) => {
   const authState = useAppSelector((root) => root.auth);
 
   const getCode = () => {
-    let r = Math.floor(100000 + Math.random() * 900000);
+    let r = Math.floor(1000 + Math.random() * 9000);
     return r + '';
   };
 
-  const roomPassword = getCode();
+  const roomPassword = useMemo(() => {
+    return getCode();
+  }, []);
 
   const handleRoomCreated = () => {
     socket.emit('ROOM_CREATED', { message: 'room created' });
