@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import NavigateBack from '../components/NavigateBack';
 
-import { IQuestion, IResultsUser, ISingleGame } from '../redux/apiSlice';
+import { IQuestion, IResultsUser, ISingleGame, IUserAnswer } from '../redux/apiSlice';
 import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material';
 import QuizSlide from '../components/quiz/QuizSlide';
 
@@ -71,10 +71,11 @@ interface IPropsRoom {
   user: IUser;
   currentGame: ISingleGame;
   isHost?: boolean;
+  userAnswers: IUserAnswer[];
   onRefetch?: () => void;
 }
 
-const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false, isConnected }: IPropsRoom) => {
+const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false, isConnected, userAnswers }: IPropsRoom) => {
   const [showResults, setShowResults] = useState(false);
 
   const [users, setUsers] = useState<IResultsUser[]>([]);
@@ -273,7 +274,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         )}
 
         {currentGame?.ended && currentGame?.quiz.questions && currentGame?.quiz.questions.length > 0 && (
-          <EndedQuiz questions={currentGame.quiz.questions} />
+          <EndedQuiz questions={currentGame.quiz.questions} userAnswers={userAnswers} />
         )}
 
         <Box className="submit-button" sx={{ marginTop: '30px', display: 'flex' }}>

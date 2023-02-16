@@ -55,36 +55,3 @@ a {
   padding: 10px;
 }
 
-.question {
-  text-align: center;
-  padding: 20px 10px;
-}
-
-.answers {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.answer {
-  border-radius: 10px;
-  border: 2px solid var(--input-border-color);
-  margin: 5px;
-  padding: 10px;
-  cursor: pointer;
-  background: var(--background-paper);
-  flex-grow: 1;
-  flex-basis: 100%;
-
-  &:hover {
-    border-color: var(--primary-color);
-  }
-  &.isSelected {
-    background: var(--border-color);
-    border-color: var(--primary-color);
-  }
-
-  @media screen and (min-width: 800px) {
-    flex-basis: 45%;
-
-  }
-}

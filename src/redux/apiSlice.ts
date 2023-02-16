@@ -94,6 +94,17 @@ interface ICreateQuizResponse {}
 
 interface IConfirmAccountResponse {}
 
+export interface IUserAnswer {
+  question_id: string;
+  answer: string;
+}
+
+interface IGameResult {
+  game: string;
+  user: string;
+  results: IUserAnswer[];
+}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 export const backendApi = createApi({
@@ -109,7 +120,7 @@ export const backendApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Quiz', 'Game'],
+  tagTypes: ['Quiz', 'Game', 'Result'],
 
   endpoints: (builder) => ({
     getMyProfile: builder.query<IUser, {}>({
@@ -143,6 +154,11 @@ export const backendApi = createApi({
     getCurrentGame: builder.query<ISingleGame, { gameId: string }>({
       query: ({ gameId }) => `games/${gameId}`,
       providesTags: ['Game'],
+    }),
+
+    getCurrentGameResults: builder.query<IGameResult, { gameId: string }>({
+      query: ({ gameId }) => `results/game/${gameId}`,
+      providesTags: ['Result'],
     }),
 
     loginUser: builder.mutation<ILoginResponse, { data: Partial<IUser> }>({
@@ -210,6 +226,7 @@ export const {
   useGetMyQuizesQuery,
   useConfirmAccountMutation,
   useGetMyGamesAsHostQuery,
+  useGetCurrentGameResultsQuery,
 } = backendApi;
 
 export default backendApi;

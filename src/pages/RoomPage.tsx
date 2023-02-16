@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import JoinRoom from '../components/game/JoinRoom';
-import { useGetCurrentGameQuery, useJoinGameMutation } from '../redux/apiSlice';
+import { useGetCurrentGameQuery, useGetCurrentGameResultsQuery, useJoinGameMutation } from '../redux/apiSlice';
 import { useAppSelector } from '../redux/hooks';
 import Room from './Room';
 import { Socket } from 'socket.io-client';
@@ -26,6 +26,10 @@ const RoomPage = ({ socket, isConnected }: IPropsRoomPage) => {
   const [joinGame, response] = useJoinGameMutation();
 
   const { data: currentGame, isLoading, refetch } = useGetCurrentGameQuery({ gameId: id || '' }, { skip: !id });
+
+  const { data: gameResults } = useGetCurrentGameResultsQuery({ gameId: id || '' }, { skip: !currentGame?.ended });
+
+  console.log('!!!!!!!!!!!! gameResults ', gameResults);
 
   const handleJoinRoom = (pass: string) => {
     if (authState.user && id) {
@@ -58,6 +62,7 @@ const RoomPage = ({ socket, isConnected }: IPropsRoomPage) => {
             isHost={currentGame.host._id === authState.user._id}
             currentGame={currentGame}
             onRefetch={refetch}
+            userAnswers={gameResults?.results || []}
           />
         )}
     </div>
