@@ -22,8 +22,8 @@ const NoRooms = () => {
     <StyledNoRooms className="NoRooms">
       <svg viewBox="0 0 865.76 682.89">
         <defs>
-          <filter id="b" x="444.44" y="-3646" width="198.87" height="32766" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feFlood flood-color="#fff" result="bg" />
+          <filter id="b" x="444.44" y="-3646" width="198.87" height="32766" filterUnits="userSpaceOnUse" >
+            <feFlood result="bg" />
 
             <feBlend in="SourceGraphic" in2="bg" />
           </filter>
@@ -33,13 +33,13 @@ const NoRooms = () => {
           </mask>
 
           <linearGradient id="c" x1="543.97" y1="258.39" x2="565.15" y2="347.9" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#fff" />
+            <stop offset="0"  />
 
             <stop offset="1" />
           </linearGradient>
 
-          <filter id="e" x="174.41" y="-3646" width="239.44" height="32766" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feFlood flood-color="#fff" result="bg" />
+          <filter id="e" x="174.41" y="-3646" width="239.44" height="32766" filterUnits="userSpaceOnUse" >
+            <feFlood  result="bg" />
 
             <feBlend in="SourceGraphic" in2="bg" />
           </filter>
@@ -57,9 +57,9 @@ const NoRooms = () => {
             width="198.87"
             height="174.55"
             filterUnits="userSpaceOnUse"
-            color-interpolation-filters="sRGB"
+
           >
-            <feFlood flood-color="#fff" result="bg" />
+            <feFlood result="bg" />
 
             <feBlend in="SourceGraphic" in2="bg" />
           </filter>
@@ -80,9 +80,8 @@ const NoRooms = () => {
             width="239.44"
             height="298.1"
             filterUnits="userSpaceOnUse"
-            color-interpolation-filters="sRGB"
           >
-            <feFlood flood-color="#fff" result="bg" />
+            <feFlood  result="bg" />
 
             <feBlend in="SourceGraphic" in2="bg" />
           </filter>
@@ -506,11 +505,11 @@ const NoRooms = () => {
           <polygon points="284.01 306.75 174.41 604.85 413.85 604.85 351.54 354.48 284.01 306.75" fill="#e5e5e5" opacity="0.5" />
         </g>
 
-        <path d="M385.87,370.44a33.93,33.93,0,0,1-11.93,6.15" fill="none" stroke="#f7a48b" stroke-miterlimit="10" />
+        <path d="M385.87,370.44a33.93,33.93,0,0,1-11.93,6.15" fill="none" stroke="#f7a48b"  />
 
-        <path d="M393.56,372.16a50,50,0,0,1-13.83,11.75" fill="none" stroke="#f7a48b" stroke-miterlimit="10" />
+        <path d="M393.56,372.16a50,50,0,0,1-13.83,11.75" fill="none" stroke="#f7a48b"  />
 
-        <path d="M387.77,386.35s7.09-4.09,9.63-11.87" fill="none" stroke="#f7a48b" stroke-miterlimit="10" />
+        <path d="M387.77,386.35s7.09-4.09,9.63-11.87" fill="none" stroke="#f7a48b"  />
       </svg>
       <Typography className='no-rooms' variant="subtitle2">No rooms available yet. Please wait.</Typography>
     </StyledNoRooms>
