@@ -10,6 +10,7 @@ const StyledFAQ = styled('div')`
   .MuiAccordion-root {
     margin-top: 20px;
   }
+  padding-bottom: 150px;
 `;
 
 const FAQ = () => {
@@ -53,7 +54,7 @@ const FAQ = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            To create a room, choose a room title and pick an existing quiz from your list. The app will automatically generate a six-digit
+            To create a room, choose a room title and pick an existing quiz from your list. The app will automatically generate a four-digit
             password for the room.
           </Typography>
         </AccordionDetails>

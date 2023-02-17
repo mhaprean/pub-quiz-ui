@@ -33,6 +33,9 @@ function App() {
       secondary: {
         main: '#8fffad',
       },
+      success: {
+        main: '#8fffad'
+      }
     },
     shape: {
       borderRadius: 10,
