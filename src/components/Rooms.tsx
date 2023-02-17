@@ -6,6 +6,8 @@ import { Socket } from 'socket.io-client';
 import { decodeHtml } from '../helpers/decodeHTML';
 import { useGetGamesQuery } from '../redux/apiSlice';
 import { useAppSelector } from '../redux/hooks';
+import Loader from './Loader';
+import NoRooms from './NoRooms';
 
 const StyledRooms = styled('div')`
   margin-bottom: 30px;
@@ -49,9 +51,9 @@ const Rooms = ({ socket }: IPropsRooms) => {
 
   return (
     <StyledRooms className="Rooms">
-      <h3>Rooms</h3>
+      <h3>Rooms:</h3>
 
-      {isLoading && <CircularProgress />}
+      {isLoading && <Loader />}
 
       {!isLoading &&
         games &&
@@ -77,7 +79,7 @@ const Rooms = ({ socket }: IPropsRooms) => {
           </div>
         ))}
 
-      {!isLoading && (!games || games.length === 0) && <div>No game rooms available yet. Please wait.</div>}
+      {!isLoading && (!games || games.length === 0) && <NoRooms />}
     </StyledRooms>
   );
 };
