@@ -1,4 +1,10 @@
-import { Logout, Quiz as QuizIcon, Create as CreateIcon, LiveHelp as LiveHelpIcon } from '@mui/icons-material';
+import {
+  Logout,
+  Quiz as QuizIcon,
+  Create as CreateIcon,
+  LiveHelp as LiveHelpIcon,
+  EmojiEvents as EmojiEventsIcon,
+} from '@mui/icons-material';
 
 import { Avatar, Box, IconButton, ListItemIcon, Menu, MenuItem, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -153,6 +159,15 @@ const Navigation = () => {
               <QuizIcon fontSize="small" />
             </ListItemIcon>
             My games
+          </MenuItem>
+        </Link>
+
+        <Link to={'/tournaments'}>
+          <MenuItem>
+            <ListItemIcon>
+              <EmojiEventsIcon fontSize="small" />
+            </ListItemIcon>
+            My Tournaments
           </MenuItem>
         </Link>
 

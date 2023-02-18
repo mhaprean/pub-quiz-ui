@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from 'react';
 import { Socket } from 'socket.io-client';
-import AddRoom from '../components/AddRoom';
-import LoginRegister from '../components/LoginRegister';
-import Rooms from '../components/Rooms';
+import AddRoom from '../components/room/AddRoom';
+import LoginRegister from '../components/auth/LoginRegister';
 import { useAppSelector } from '../redux/hooks';
+import Rooms from '../components/room/Rooms';
 
 interface IPropsHompage {
   socket: Socket;

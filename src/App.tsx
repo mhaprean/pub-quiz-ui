@@ -12,6 +12,7 @@ import MyGames from './pages/MyGames';
 import CreateQuiz from './pages/CreateQuiz';
 import FaqPage from './pages/FaqPage';
 import ConfirmAccountPage from './pages/ConfirmAccountPage';
+import MyTournaments from './pages/MyTournaments';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
@@ -84,6 +85,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage socket={socket} />} />
           <Route path="/games" element={<MyGames />} />
+          <Route path="/tournaments" element={<MyTournaments />} />
           <Route path="/quiz/create" element={<CreateQuiz />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/confirm/:id/:token" element={<ConfirmAccountPage />} />

@@ -27,8 +27,8 @@ import React from 'react';
 import { useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
-import { useCreateGameMutation, useGetMyQuizesQuery, useGetQuizesQuery } from '../redux/apiSlice';
-import QuizList from './quiz/QuizList';
+import { useCreateGameMutation, useGetMyQuizesQuery, useGetQuizesQuery } from '../../redux/apiSlice';
+import QuizList from '../quiz/QuizList';
 import { useNavigate } from 'react-router-dom';
 
 const Transition = React.forwardRef(function Transition(

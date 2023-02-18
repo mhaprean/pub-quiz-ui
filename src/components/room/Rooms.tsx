@@ -3,10 +3,10 @@ import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
-import { decodeHtml } from '../helpers/decodeHTML';
-import { useGetGamesQuery } from '../redux/apiSlice';
-import { useAppSelector } from '../redux/hooks';
-import Loader from './Loader';
+import { decodeHtml } from '../../helpers/decodeHTML';
+import { useGetGamesQuery } from '../../redux/apiSlice';
+import { useAppSelector } from '../../redux/hooks';
+import Loader from '../Loader';
 import NoRooms from './NoRooms';
 
 const StyledRooms = styled('div')`

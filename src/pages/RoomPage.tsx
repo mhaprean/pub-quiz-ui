@@ -26,7 +26,7 @@ const RoomPage = ({ socket, isConnected }: IPropsRoomPage) => {
 
   const [joinGame, response] = useJoinGameMutation();
 
-  const { data: currentGame, isLoading, refetch } = useGetCurrentGameQuery({ gameId: id || '' }, { skip: !id });
+  const { data: currentGame, isLoading, isFetching, refetch } = useGetCurrentGameQuery({ gameId: id || '' }, { skip: !id });
 
   const { data: gameResults } = useGetCurrentGameResultsQuery({ gameId: id || '' }, { skip: !currentGame?.ended });
 
@@ -47,7 +47,7 @@ const RoomPage = ({ socket, isConnected }: IPropsRoomPage) => {
 
   return (
     <div className="container">
-      {isLoading && <Loader />}
+      {(isLoading || isFetching) && <Loader />}
       {currentGame &&
         authState.user &&
         !currentGame.participants.includes(authState.user._id) &&
