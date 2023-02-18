@@ -2,6 +2,17 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUser } from './authSlice';
 import { RootState } from './store';
 
+export interface ITournament {
+  _id: string;
+  title: string;
+  host: string;
+  participants: string[];
+  games: string[];
+
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface ILoginResponse {
   user: IUser;
   access_token: string;
@@ -24,6 +35,7 @@ export interface IQuiz {
   title: string;
   difficulty: string;
   type: string;
+  creator: string;
   category: string;
   createdAt: string;
   updatedAt: string;
@@ -107,6 +119,8 @@ interface IGameResult {
 
 interface IDeleteQuizResponse {}
 
+interface ICreateTournamentResponse {}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 export const backendApi = createApi({
@@ -122,7 +136,7 @@ export const backendApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Quiz', 'Game', 'Result'],
+  tagTypes: ['Quiz', 'Game', 'Result', 'Tournament'],
 
   endpoints: (builder) => ({
     getMyProfile: builder.query<IUser, {}>({
@@ -212,6 +226,25 @@ export const backendApi = createApi({
       invalidatesTags: ['Quiz', 'Game'],
     }),
 
+    createTournament: builder.mutation<ICreateTournamentResponse, { title: string }>({
+      query: (data) => ({
+        url: 'tournaments/create',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Tournament'],
+    }),
+
+    getMyTournaments: builder.query<ITournament[], {}>({
+      query: () => 'tournaments/mytournaments',
+      providesTags: ['Tournament'],
+    }),
+
+    getMyTournamentsAsHost: builder.query<ITournament[], {}>({
+      query: () => 'tournaments/hostedbyme',
+      providesTags: ['Tournament'],
+    }),
+
     joinGame: builder.mutation<IJoinGameResponse, { gameId: string; password: string }>({
       query: (data) => ({
         url: `games/join/${data.gameId}`,
@@ -238,6 +271,9 @@ export const {
   useGetMyGamesAsHostQuery,
   useGetCurrentGameResultsQuery,
   useDeleteQuizMutation,
+  useCreateTournamentMutation,
+  useGetMyTournamentsAsHostQuery,
+  useGetMyTournamentsQuery,
 } = backendApi;
 
 export default backendApi;
