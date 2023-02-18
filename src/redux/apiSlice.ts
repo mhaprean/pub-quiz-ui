@@ -217,13 +217,13 @@ export const backendApi = createApi({
       invalidatesTags: ['Quiz'],
     }),
 
-    createGame: builder.mutation<ICreateGameResponse, { quiz_id: string; title: string; password: string }>({
+    createGame: builder.mutation<ICreateGameResponse, { quiz: string; title: string; password: string; tournament: string }>({
       query: (data) => ({
         url: 'games/create',
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Quiz', 'Game'],
+      invalidatesTags: ['Quiz', 'Game', 'Tournament'],
     }),
 
     createTournament: builder.mutation<ICreateTournamentResponse, { title: string }>({

@@ -1,16 +1,10 @@
 import {
-  Avatar,
   Box,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
+  MenuItem,
+  Select,
   Slide,
   Tab,
   Tabs,
@@ -27,7 +21,7 @@ import React from 'react';
 import { useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
-import { useCreateGameMutation, useGetMyQuizesQuery, useGetQuizesQuery } from '../../redux/apiSlice';
+import { useCreateGameMutation, useGetMyQuizesQuery, useGetMyTournamentsAsHostQuery, useGetQuizesQuery } from '../../redux/apiSlice';
 import QuizList from '../quiz/QuizList';
 import { useNavigate } from 'react-router-dom';
 
@@ -69,9 +63,8 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-
   const [tab, setTab] = useState('myquizes');
-
+  const [tournament, setTournament] = useState('');
   const [roomName, setRoomName] = useState('');
   const [selectedQuiz, setSelectedQuiz] = useState('');
 
@@ -79,6 +72,10 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const [createGame, response] = useCreateGameMutation();
+  
+  const { data: quizes, isFetching } = useGetQuizesQuery({}, { skip: tab === 'myquizes' });
+  const { data: myQuizes, isFetching: isMyQuizesFetching } = useGetMyQuizesQuery({});
+  const { data: myTournamentsAsHost, isLoading } = useGetMyTournamentsAsHostQuery({});
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -94,15 +91,13 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
 
   const handleCreateGame = async () => {
     try {
-      const res = await createGame({ quiz_id: selectedQuiz, title: roomName, password }).unwrap();
+      const res = await createGame({ quiz: selectedQuiz, title: roomName, password, tournament }).unwrap();
 
       onRoomCreated();
       navigate(`/rooms/${res._id}`);
     } catch (error) {}
   };
 
-  const { data: quizes, isFetching } = useGetQuizesQuery({}, { skip: tab === 'myquizes' });
-  const { data: myQuizes, isFetching: isMyQuizesFetching } = useGetMyQuizesQuery({});
 
   return (
     <div className="AddRoom">
@@ -130,10 +125,20 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
               <CloseIcon />
             </IconButton>
           </div>
-          <Typography variant="subtitle2">Room name</Typography>
-          <TextField variant="outlined" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
-          <Typography variant="subtitle2">Room password:</Typography>
-          <Typography variant="h4">{password}</Typography>
+
+          <div>
+            <Typography variant="subtitle2">Room name</Typography>
+            <TextField variant="outlined" value={roomName} onChange={(e) => setRoomName(e.target.value)} sx={{ width: '100%' }} />
+            <Typography variant="subtitle2">Tournament</Typography>
+            <Select value={tournament} onChange={(e) => setTournament(e.target.value)} sx={{ width: '100%' }}>
+              {myTournamentsAsHost &&
+                myTournamentsAsHost.map((tour, idx) => (
+                  <MenuItem key={tour._id} value={tour._id}>
+                    {tour.title}
+                  </MenuItem>
+                ))}
+            </Select>
+          </div>
 
           <div className="quizes">
             <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
