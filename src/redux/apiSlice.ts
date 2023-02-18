@@ -105,6 +105,8 @@ interface IGameResult {
   results: IUserAnswer[];
 }
 
+interface IDeleteQuizResponse {}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 export const backendApi = createApi({
@@ -193,6 +195,14 @@ export const backendApi = createApi({
       invalidatesTags: ['Quiz'],
     }),
 
+    deleteQuiz: builder.mutation<IDeleteQuizResponse, { quizId: string }>({
+      query: ({ quizId }) => ({
+        url: `quiz/${quizId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Quiz'],
+    }),
+
     createGame: builder.mutation<ICreateGameResponse, { quiz_id: string; title: string; password: string }>({
       query: (data) => ({
         url: 'games/create',
@@ -227,6 +237,7 @@ export const {
   useConfirmAccountMutation,
   useGetMyGamesAsHostQuery,
   useGetCurrentGameResultsQuery,
+  useDeleteQuizMutation,
 } = backendApi;
 
 export default backendApi;
