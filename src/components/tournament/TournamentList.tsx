@@ -5,6 +5,8 @@ import { decodeHtml } from '../../helpers/decodeHTML';
 import { IMyTournament, ITournament } from '../../redux/apiSlice';
 
 const StyledTournamentList = styled('div')`
+
+  margin-bottom: 50px;
   .tournament {
     border: 2px solid var(--input-border-color);
     padding: 10px;

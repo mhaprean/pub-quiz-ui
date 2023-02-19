@@ -34,7 +34,9 @@ interface IPropsTournamentResults {
 const TournamentResults = ({ users }: IPropsTournamentResults) => {
   return (
     <StyledTournamentResults className="TournamentResults">
-      <Typography>Leaderboard:</Typography>
+      {users.length > 0 && <Typography>Leaderboard:</Typography>}
+      {users.length === 0 && <Typography variant="subtitle2">No users played this tournament</Typography>}
+
       {users.map((user, idx) => (
         <Box className="player" key={idx}>
           <CupIcon place={idx + 1} />

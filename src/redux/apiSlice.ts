@@ -79,6 +79,7 @@ export interface IGame {
   participants: string[];
   // quiz: string;
   host: string;
+
   results: IResultsUser[];
   quiz: {
     _id: string;
@@ -90,6 +91,7 @@ export interface IGame {
 
 export interface IMyGame extends Omit<IGame, 'host'> {
   host: IUser;
+  tournament: ITournament;
 }
 
 export interface ISingleGame extends Omit<IGame, 'host'> {

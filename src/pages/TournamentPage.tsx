@@ -1,7 +1,11 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
+import DayHeader from '../components/game/DayHeader';
 import Loader from '../components/Loader';
 import QuizResults from '../components/quiz/QuizResults';
+import TournamentHeader from '../components/tournament/TournamentHeader';
 import TournamentResults from '../components/tournament/TournamentResults';
+import { isSameDay } from '../helpers/formatDate';
 import { IGame, IResultsUser, useGetTournamentQuery } from '../redux/apiSlice';
 import { IUser } from '../redux/authSlice';
 
@@ -36,9 +40,19 @@ const TournamentPage = () => {
     <div className="container">
       {isLoading && <Loader />}
 
-      {!isLoading && data && <TournamentResults users={getScore(data.participants, data.games)} />}
+      {!isLoading && data && (
+        <>
+          <TournamentHeader tournament={data} />
+          <TournamentResults users={getScore(data.participants, data.games)} />
+          {data.games.map((game, idx) => (
+            <React.Fragment key={game._id}>
+              {(idx === 0 || !isSameDay(game.createdAt, data.games[idx - 1].createdAt)) && <DayHeader date={game.createdAt} />}
 
-      {!isLoading && data && data.games.map((game, idx) => <QuizResults users={game.results} title={game.title} key={idx} />)}
+              <QuizResults users={game.results} title={'Game: ' + game.title} key={idx} />
+            </React.Fragment>
+          ))}
+        </>
+      )}
     </div>
   );
 };

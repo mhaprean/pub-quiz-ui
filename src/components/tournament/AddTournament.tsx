@@ -8,7 +8,7 @@ const StyledAddTournaments = styled('div')`
     margin-bottom: 15px;
   }
 
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 `;
 
 const AddTournament = () => {
