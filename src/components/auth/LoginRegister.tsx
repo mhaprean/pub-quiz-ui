@@ -66,7 +66,7 @@ const LoginRegister = () => {
     try {
       const res = await loginBackend({
         data: {
-          name: username, // identifier can be username or email
+          name: username.trim(),
           password: password,
         },
       }).unwrap();
@@ -100,7 +100,7 @@ const LoginRegister = () => {
     }
 
     const newUser: Partial<IUser> = {
-      name: username,
+      name: username.trim(),
       email,
       password,
       image,
