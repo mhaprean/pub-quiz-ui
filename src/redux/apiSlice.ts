@@ -13,6 +13,21 @@ export interface ITournament {
   updatedAt: string;
 }
 
+export interface IMyTournament extends Omit<ITournament, 'host'> {
+  host: IUser;
+}
+
+export interface ISingleTournament {
+  _id: string;
+  title: string;
+  games: IGame[];
+  host: IUser;
+  participants: IUser[];
+
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface ILoginResponse {
   user: IUser;
   access_token: string;
@@ -50,11 +65,13 @@ interface ICreateGameResponse extends IGame {
 
 export interface IResultsUser {
   id?: string;
+  user_id: string;
   username: string;
-  points: string;
+  points: number;
+  image?: string;
 }
 
-interface IGame {
+export interface IGame {
   _id: string;
   title: string;
   active: true;
@@ -72,12 +89,7 @@ interface IGame {
 }
 
 export interface IMyGame extends Omit<IGame, 'host'> {
-  host: {
-    name: string;
-    email: string;
-    _id: string;
-    image: string;
-  };
+  host: IUser;
 }
 
 export interface ISingleGame extends Omit<IGame, 'host'> {
@@ -235,13 +247,18 @@ export const backendApi = createApi({
       invalidatesTags: ['Tournament'],
     }),
 
-    getMyTournaments: builder.query<ITournament[], {}>({
+    getMyTournaments: builder.query<IMyTournament[], {}>({
       query: () => 'tournaments/mytournaments',
       providesTags: ['Tournament'],
     }),
 
-    getMyTournamentsAsHost: builder.query<ITournament[], {}>({
+    getMyTournamentsAsHost: builder.query<IMyTournament[], {}>({
       query: () => 'tournaments/hostedbyme',
+      providesTags: ['Tournament'],
+    }),
+
+    getTournament: builder.query<ISingleTournament, { tournamentId: string }>({
+      query: ({ tournamentId }) => `tournaments/${tournamentId}`,
       providesTags: ['Tournament'],
     }),
 
@@ -274,6 +291,7 @@ export const {
   useCreateTournamentMutation,
   useGetMyTournamentsAsHostQuery,
   useGetMyTournamentsQuery,
+  useGetTournamentQuery,
 } = backendApi;
 
 export default backendApi;
