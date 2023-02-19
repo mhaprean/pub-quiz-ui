@@ -160,7 +160,7 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
               color="secondary"
               size="large"
               className="host-quiz-button"
-              disabled={selectedQuiz === '' || roomName === ''}
+              disabled={selectedQuiz === '' || roomName.length < 3}
               onClick={handleCreateGame}
             >
               HOST QUIZ
