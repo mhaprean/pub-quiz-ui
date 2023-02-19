@@ -14,7 +14,7 @@ const MyTournaments = () => {
     <div className="container">
       {authState.isAuth && authState.user?.role === 'host' && <AddTournament />}
 
-      {isTournamentsFetching && <Loader />}
+      {(isTournamentsFetching || isLoading) && <Loader />}
 
       {!isTournamentsFetching && <TournamentList tournaments={myTournaments || []} />}
 

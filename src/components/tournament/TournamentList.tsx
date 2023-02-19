@@ -1,8 +1,8 @@
-import { Button, Typography } from '@mui/material';
+import { Avatar, Button, Chip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { decodeHtml } from '../../helpers/decodeHTML';
-import { ITournament } from '../../redux/apiSlice';
+import { IMyTournament, ITournament } from '../../redux/apiSlice';
 
 const StyledTournamentList = styled('div')`
   .tournament {
@@ -11,15 +11,28 @@ const StyledTournamentList = styled('div')`
     margin-top: 15px;
     border-radius: 10px;
     background: var(--background-paper);
+  }
 
+  .tournament-host {
+    margin: 10px 0;
+
+    .host {
+      margin-right: 10px;
+    }
+    .games-count {
+      margin-left: 10px;
+    }
+  }
+
+  .participants {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
   }
 `;
 
 interface IPropsTournamentList {
-  tournaments: ITournament[];
+  tournaments: IMyTournament[];
   asHost?: boolean;
 }
 
@@ -30,13 +43,34 @@ const TournamentList = ({ tournaments, asHost = false }: IPropsTournamentList) =
 
       {tournaments.map((tournament, idx) => (
         <div key={tournament._id} className="tournament">
-          <Typography variant="subtitle1">{decodeHtml(tournament.title)}</Typography>
+          <div className="title">
+            <Typography variant="subtitle1">{decodeHtml(tournament.title)}</Typography>
+          </div>
+          <div className="tournament-host">
+            <Typography variant="caption" className="host">
+              Host:
+            </Typography>
+            <Chip size="small" avatar={<Avatar alt="" src={tournament.host.image} />} label={tournament.host.name} variant="outlined" />
 
-          <Link to={`/tournaments/${tournament._id}`}>
-            <Button variant="contained" size="small" className="tournament-button">
-              See details
-            </Button>
-          </Link>
+            <Chip
+              className="games-count"
+              label={tournament.games.length === 1 ? '1 game' : `${tournament.games.length} games`}
+              size="small"
+              variant="outlined"
+            />
+          </div>
+
+          <div className="participants">
+            <Chip
+              label={tournament.participants.length === 1 ? '1 participant' : `${tournament.participants.length} participants`}
+              size="small"
+            />
+            <Link to={`/tournaments/${tournament._id}`}>
+              <Button variant="contained" size="small" className="tournament-button">
+                See details
+              </Button>
+            </Link>
+          </div>
         </div>
       ))}
     </StyledTournamentList>

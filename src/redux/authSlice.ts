@@ -9,6 +9,8 @@ export interface IUser {
   createdAt: string;
   updatedAt: string;
   password?: string;
+
+  score?: number;
 }
 
 export interface AuthState {
