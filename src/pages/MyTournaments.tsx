@@ -16,9 +16,9 @@ const MyTournaments = () => {
 
       {(isTournamentsFetching || isLoading) && <Loader />}
 
-      {!isTournamentsFetching && <TournamentList tournaments={myTournaments || []} />}
-
       <TournamentList tournaments={myTournamentsAsHost || []} asHost />
+
+      {!isTournamentsFetching && <TournamentList tournaments={myTournaments || []} />}
     </div>
   );
 };
