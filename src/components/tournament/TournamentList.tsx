@@ -20,6 +20,12 @@ const TournamentList = ({ tournaments, asHost = false }: IPropsTournamentList) =
       {tournaments.map((tournament, idx) => (
         <TournamentItem key={tournament._id} tournament={tournament} />
       ))}
+
+      {tournaments.length === 0 && (
+        <Typography variant="subtitle2">
+          {asHost ? 'No tournaments hosted by me.' : 'You have not participated in any tournaments yet'}
+        </Typography>
+      )}
     </StyledTournamentList>
   );
 };
