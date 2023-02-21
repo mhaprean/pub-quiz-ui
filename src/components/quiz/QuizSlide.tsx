@@ -38,9 +38,12 @@ const StyledQuizSlide = styled('div')`
     flex-basis: 100%;
     display: flex;
 
-    &:hover {
-      border-color: var(--primary-color);
+    &.pickable {
+      &:hover {
+        border-color: var(--primary-color);
+      }
     }
+
     &.isSelected {
       background: var(--border-color);
       border-color: var(--primary-color);
@@ -98,6 +101,7 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0,
               isSelected: ans === answer && !ended,
               isCorrect: ended && ans === answer,
               isWrong: userPick === ans && userPick !== answer,
+              pickable: pickable,
             })}
             onClick={() => handlePickAnswer(ans)}
           >
