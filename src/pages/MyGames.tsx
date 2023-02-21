@@ -16,7 +16,7 @@ const MyGames = () => {
       {isLoading && <Loader />}
 
       {!isLoading && games && <GameList games={games.filter((game) => game.quiz !== null)} />}
-      {!isGamesAsHostLoading && gamesAsHost && <GameList games={gamesAsHost.filter((game) => game.quiz !== null)} asHost />}
+      {!isGamesAsHostLoading && gamesAsHost && <GameList games={gamesAsHost.filter((game) => game.quiz !== null)} asHost={true} />}
     </div>
   );
 };

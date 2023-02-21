@@ -186,6 +186,14 @@ export const backendApi = createApi({
       providesTags: ['Game'],
     }),
 
+    deleteGame: builder.mutation<{}, { gameId: string }>({
+      query: ({ gameId }) => ({
+        url: `games/${gameId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Game'],
+    }),
+
     getCurrentGameResults: builder.query<IGameResult, { gameId: string }>({
       query: ({ gameId }) => `results/game/${gameId}`,
       providesTags: ['Result'],
@@ -294,6 +302,7 @@ export const {
   useGetMyTournamentsAsHostQuery,
   useGetMyTournamentsQuery,
   useGetTournamentQuery,
+  useDeleteGameMutation,
 } = backendApi;
 
 export default backendApi;
