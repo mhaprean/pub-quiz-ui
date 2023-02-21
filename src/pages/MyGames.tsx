@@ -14,9 +14,9 @@ const MyGames = () => {
   return (
     <div className="container">
       {isLoading && <Loader />}
-      
-      {!isLoading && games && <GameList games={games} />}
-      {!isGamesAsHostLoading && gamesAsHost && <GameList games={gamesAsHost} asHost />}
+
+      {!isLoading && games && <GameList games={games.filter((game) => game.quiz !== null)} />}
+      {!isGamesAsHostLoading && gamesAsHost && <GameList games={gamesAsHost.filter((game) => game.quiz !== null)} asHost />}
     </div>
   );
 };
