@@ -59,6 +59,7 @@ const Navigation = () => {
   useEffect(() => {
     if (isError) {
       dispatch(logout());
+      navigate('/');
     }
   }, [isError]);
 
