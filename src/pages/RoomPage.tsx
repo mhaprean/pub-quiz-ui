@@ -30,8 +30,6 @@ const RoomPage = ({ socket, isConnected }: IPropsRoomPage) => {
 
   const { data: gameResults } = useGetCurrentGameResultsQuery({ gameId: id || '' }, { skip: !currentGame?.ended });
 
-  console.log('!!!!!!!!!!!! gameResults ', gameResults);
-
   const handleJoinRoom = (pass: string) => {
     if (authState.user && id) {
       if (pass === currentGame?.password) {

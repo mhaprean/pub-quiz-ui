@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
-import NavigateBack from '../components/NavigateBack';
-
 import { IQuestion, IResultsUser, ISingleGame, IUserAnswer } from '../redux/apiSlice';
 import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material';
 import QuizSlide from '../components/quiz/QuizSlide';
-
 import { Socket } from 'socket.io-client';
 import QuizResults from '../components/quiz/QuizResults';
 import HostRoomHeader from '../components/game/HostRoomHeader';
@@ -16,11 +13,15 @@ interface IRoomUser {
   id: string;
   name: string;
   points: number;
+  answers: {
+    [key: string]: IUserAnswer;
+  };
 }
 
 interface IRoomGame {
   expectedAnswer: string;
   started: boolean;
+  currentQuestionId: string;
   currentQuestion: IQuestion | null;
   questionIdx: number;
   questionAnsweredBy: string[];
@@ -92,8 +93,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
 
   const [participantsCount, setParticipantsCount] = useState(1);
 
-  const isGameHost = isHost;
-
   const hasMoreQuestions = currentGame && isHost && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
 
   useEffect(() => {
@@ -133,10 +132,16 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     socket.on('WELCOME_BACK', ({ game }: IGameRestore) => {
       const isAllowedSubmit = !game.questionAnsweredBy.includes(user._id);
 
+      if (game.currentQuestion && game.users[user._id] && game.users[user._id].answers[game.currentQuestion._id]) {
+        const userResponse = game.users[user._id].answers[game.currentQuestion._id].answer;
+        setAnswer(userResponse);
+      } else {
+        setAnswer('');
+      }
+
       setGameStarted(game.started);
       setCanSubmit(isAllowedSubmit);
       setQuestion(game.currentQuestion);
-      setAnswer('');
       setCurrentQuestionIdx(game.questionIdx);
       setParticipantsCount(game.onlineUsers.length);
     });
@@ -232,13 +237,13 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         {/* This is for the room host.
           Alaways display the room password and the total number of users. 
         */}
-        {isGameHost && currentGame?.password && !currentGame?.ended && (
+        {isHost && currentGame?.password && !currentGame?.ended && (
           <HostRoomHeader password={currentGame.password} total={participantsCount} />
         )}
 
-        {!isGameHost && !currentGame?.ended && <Typography variant="subtitle2">Online: {participantsCount} users</Typography>}
+        {!isHost && !currentGame?.ended && <Typography variant="subtitle2">Online: {participantsCount} users</Typography>}
 
-        {isGameHost && !gameStarted && !currentGame?.ended && (
+        {isHost && !gameStarted && !currentGame?.ended && (
           <div>
             <Button variant="contained" size="large" onClick={startGame}>
               START QUIZ
@@ -246,7 +251,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
           </div>
         )}
 
-        {!isGameHost && !gameStarted && !currentGame.ended && (
+        {!isHost && !gameStarted && !currentGame.ended && (
           <div>
             <Alert severity="success">
               <AlertTitle>Welcome!</AlertTitle>
@@ -261,7 +266,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
               answer={answer}
               question={question}
               onPickAnswer={setAnswer}
-              pickable={!isGameHost && canSubmit}
+              pickable={!isHost && canSubmit}
               questionIndex={currentQuestionIdx}
             />
           </div>
@@ -278,19 +283,19 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         )}
 
         <Box className="submit-button" sx={{ marginTop: '30px', display: 'flex' }}>
-          {isGameHost && gameStarted && hasMoreQuestions && (
+          {isHost && gameStarted && hasMoreQuestions && (
             <Button variant="contained" size="large" onClick={onNextQuestion} sx={{ marginLeft: 'auto' }}>
               NEXT QUESTION
             </Button>
           )}
 
-          {isGameHost && gameStarted && !hasMoreQuestions && !currentGame?.ended && (
+          {isHost && gameStarted && !hasMoreQuestions && !currentGame?.ended && (
             <Button variant="contained" size="large" onClick={getQuizResults} sx={{ marginLeft: 'auto' }}>
               GET QUIZ RESULTS
             </Button>
           )}
 
-          {!isGameHost && gameStarted && !currentGame?.ended && (
+          {!isHost && gameStarted && !currentGame?.ended && (
             <Button variant="contained" size="large" onClick={onSubmitAnswer} sx={{ marginLeft: 'auto' }} disabled={!canSubmit || !answer}>
               SUBMIT ANSWER
             </Button>

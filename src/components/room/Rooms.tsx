@@ -51,7 +51,7 @@ const Rooms = ({ socket }: IPropsRooms) => {
 
   return (
     <StyledRooms className="Rooms">
-      <h3>Rooms:</h3>
+      {!isLoading && games && games.length > 0 && <Typography variant="subtitle1">Rooms:</Typography>}
 
       {isLoading && <Loader />}
 
