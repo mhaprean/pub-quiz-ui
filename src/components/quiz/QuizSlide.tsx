@@ -75,7 +75,7 @@ const StyledQuizSlide = styled('div')`
 `;
 
 const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0, answer, ended = false, userPick }: IPropsQuizSlide) => {
-  const options = ['A.', 'B.', 'C.', 'D.'];
+  const options = ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.'];
 
   const handlePickAnswer = (answer: string) => {
     if (!pickable) {

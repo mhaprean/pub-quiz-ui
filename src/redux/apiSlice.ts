@@ -191,7 +191,7 @@ export const backendApi = createApi({
         url: `games/${gameId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Game'],
+      invalidatesTags: ['Game', 'Tournament'],
     }),
 
     getCurrentGameResults: builder.query<IGameResult, { gameId: string }>({
@@ -262,7 +262,7 @@ export const backendApi = createApi({
         url: `tournaments/${tournamentId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Tournament'],
+      invalidatesTags: ['Tournament', 'Game'],
     }),
 
     getMyTournaments: builder.query<IMyTournament[], {}>({
@@ -286,7 +286,7 @@ export const backendApi = createApi({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Game'],
+      invalidatesTags: ['Game', 'Tournament'],
     }),
   }),
 });

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IQuestion, IResultsUser, ISingleGame, IUserAnswer } from '../redux/apiSlice';
+import { IQuestion, IQuiz, IResultsUser, ISingleGame, IUserAnswer } from '../redux/apiSlice';
 import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material';
 import QuizSlide from '../components/quiz/QuizSlide';
 import { Socket } from 'socket.io-client';
@@ -36,16 +36,20 @@ interface IJoinRoomPayload {
   username: string;
   userId: string;
   isHost: boolean;
+  quiz: IQuiz | null;
 }
 
-interface IStartGamePayload {
-  gameId: string;
-  userId: string;
+interface IStartGame {
   question: IQuestion;
   questionIdx: number;
 }
 
-interface INextQuestionPayload extends IStartGamePayload {}
+interface INextQuestion extends IStartGame {}
+
+interface IOnNextQuestion {
+  gameId: string;
+  userId: string;
+}
 
 interface ISubmitAnswerPayload {
   gameId: string;
@@ -101,17 +105,18 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       userId: user._id,
       username: user.name,
       isHost: isHost,
+      quiz: isHost ? currentGame.quiz : null,
     };
     socket.emit('join_room', joinData);
 
-    socket.on('QUIZ_STARTED', (data: IStartGamePayload) => {
+    socket.on('QUIZ_STARTED', (data: IStartGame) => {
       setGameStarted(true);
       setCanSubmit(true);
       setQuestion(data.question);
       setCurrentQuestionIdx(data.questionIdx);
     });
 
-    socket.on('NEXT_QUESTION', (data: INextQuestionPayload) => {
+    socket.on('NEXT_QUESTION', (data: INextQuestion) => {
       setGameStarted(true);
       setCanSubmit(true);
       setQuestion(data.question);
@@ -135,10 +140,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       if (game.currentQuestion && game.users[user._id] && game.users[user._id].answers[game.currentQuestion._id]) {
         const userResponse = game.users[user._id].answers[game.currentQuestion._id].answer;
         setAnswer(userResponse);
-      } else {
-        setAnswer('');
       }
-
       setGameStarted(game.started);
       setCanSubmit(isAllowedSubmit);
       setQuestion(game.currentQuestion);
@@ -150,11 +152,16 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       setParticipantsCount(data.countUsers);
     });
 
+    socket.on('ANSWER_SUBMITED', (data) => {
+      setCanSubmit(false);
+    });
+
     return () => {
       socket.off('QUIZ_STARTED');
       socket.off('NEXT_QUESTION');
       socket.off('QUIZ_ENDED');
       socket.off('USER_JOINED');
+      socket.off('ANSWER_SUBMITED');
 
       socket.off('join_room');
 
@@ -167,20 +174,11 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
    * function for game host
    */
   const startGame = () => {
-    const question = currentGame?.quiz.questions[0];
-
-    if (question && user._id) {
-      const startGameData: IStartGamePayload = {
-        gameId: currentGame._id,
-        userId: user._id,
-        question: question,
-        questionIdx: 0,
-      };
-      socket.emit('game_started', startGameData);
-
-      setQuestion(question);
-      setGameStarted(true);
-    }
+    const startGameData: IOnNextQuestion = {
+      gameId: currentGame._id,
+      userId: user._id,
+    };
+    socket.emit('game_started', startGameData);
   };
 
   /**
@@ -188,35 +186,21 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
    * function for game host
    */
   const onNextQuestion = () => {
-    const newQuestion = currentGame?.quiz.questions[currentQuestionIdx + 1];
-
-    if (newQuestion && user) {
-      const nextQuestionPayload: INextQuestionPayload = {
-        gameId: currentGame._id,
-        userId: user._id,
-        question: newQuestion,
-        questionIdx: currentQuestionIdx + 1,
-      };
-      socket.emit('next_question', nextQuestionPayload);
-
-      setQuestion(newQuestion);
-      setCurrentQuestionIdx(currentQuestionIdx + 1);
-    }
+    const nextQuestionPayload: IOnNextQuestion = {
+      gameId: currentGame._id,
+      userId: user._id,
+    };
+    socket.emit('next_question', nextQuestionPayload);
   };
 
   const onSubmitAnswer = () => {
-    if (user) {
-      const submitAnswerPayload: ISubmitAnswerPayload = {
-        gameId: currentGame._id,
-        userId: user?._id,
-        questionIdx: currentQuestionIdx,
-        answer,
-      };
-
-      socket.emit('SUBMIT_ANSWER', submitAnswerPayload);
-
-      setCanSubmit(false);
-    }
+    const submitAnswerPayload: ISubmitAnswerPayload = {
+      gameId: currentGame._id,
+      userId: user._id,
+      questionIdx: currentQuestionIdx,
+      answer,
+    };
+    socket.emit('SUBMIT_ANSWER', submitAnswerPayload);
   };
 
   const getQuizResults = () => {
