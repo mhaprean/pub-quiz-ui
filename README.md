@@ -22,6 +22,8 @@
 
 - When the quiz ends, both Users and Hosts will see the scores of each participant.
 
+- A game can also be part of a tournament. Users will see a tournament page, with the score from all games and a leaderboard.
+
 - The prizes for the winners can be decided by each pub
 
 
