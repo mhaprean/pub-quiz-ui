@@ -57,6 +57,10 @@ const StyledQuizSlide = styled('div')`
       background: ${(props) => alpha(props.theme.palette.error.main, 0.6)};
     }
 
+    &.correctAnswer {
+      border-color: ${(props) => props.theme.palette.success.main};
+    }
+
     .result {
       margin-left: auto;
 
@@ -102,6 +106,7 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0,
               isCorrect: ended && ans === answer,
               isWrong: userPick === ans && userPick !== answer,
               pickable: pickable,
+              correctAnswer: userPick === ans && ans === answer,
             })}
             onClick={() => handlePickAnswer(ans)}
           >
