@@ -105,6 +105,10 @@ export interface ISingleGame extends Omit<IGame, 'host'> {
     createdAt: string;
     updatedAt: string;
   };
+  tournament: {
+    title: string;
+    participants: string[];
+  };
 }
 
 interface IJoinGameResponse {}

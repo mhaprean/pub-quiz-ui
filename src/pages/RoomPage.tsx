@@ -49,11 +49,14 @@ const RoomPage = ({ socket, isConnected }: IPropsRoomPage) => {
       {currentGame &&
         authState.user &&
         !currentGame.participants.includes(authState.user._id) &&
+        (!currentGame.tournament || !currentGame.tournament?.participants?.includes(authState.user._id)) &&
         currentGame.host._id !== authState.user._id && <JoinRoom onJoin={handleJoinRoom} error={errorPass} joined={joined} />}
 
       {currentGame &&
         authState.user &&
-        (currentGame.participants.includes(authState.user._id) || currentGame.host._id === authState.user._id) && (
+        (currentGame.participants.includes(authState.user._id) ||
+          currentGame.host._id === authState.user._id ||
+          currentGame.tournament?.participants?.includes(authState.user._id)) && (
           <Room
             isConnected={isConnected}
             socket={socket}
