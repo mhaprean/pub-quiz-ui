@@ -95,8 +95,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
 
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
 
-  const [participantsCount, setParticipantsCount] = useState(1);
-
   const hasMoreQuestions = currentGame && isHost && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
 
   useEffect(() => {
@@ -130,10 +128,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       onRefetch();
     });
 
-    socket.on('USER_JOINED', ({ game }: { game: IRoomGame }) => {
-      setParticipantsCount(game.onlineUsers.length);
-    });
-
     socket.on('WELCOME_BACK', ({ game }: IGameRestore) => {
       const isAllowedSubmit = !game.questionAnsweredBy.includes(user._id);
 
@@ -145,11 +139,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       setCanSubmit(isAllowedSubmit);
       setQuestion(game.currentQuestion);
       setCurrentQuestionIdx(game.questionIdx);
-      setParticipantsCount(game.onlineUsers.length);
-    });
-
-    socket.on('USER_LEFT', (data: { countUsers: number }) => {
-      setParticipantsCount(data.countUsers);
     });
 
     socket.on('ANSWER_SUBMITED', (data) => {
@@ -160,7 +149,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       socket.off('QUIZ_STARTED');
       socket.off('NEXT_QUESTION');
       socket.off('QUIZ_ENDED');
-      socket.off('USER_JOINED');
       socket.off('ANSWER_SUBMITED');
 
       socket.off('join_room');
@@ -222,10 +210,8 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
           Alaways display the room password and the total number of users. 
         */}
         {isHost && currentGame?.password && !currentGame?.ended && (
-          <HostRoomHeader password={currentGame.password} total={participantsCount} />
+          <HostRoomHeader password={currentGame.password} total={0} />
         )}
-
-        {!isHost && !currentGame?.ended && <Typography variant="subtitle2">Online: {participantsCount} users</Typography>}
 
         {isHost && !gameStarted && !currentGame?.ended && (
           <div>
@@ -281,7 +267,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
 
           {!isHost && gameStarted && !currentGame?.ended && (
             <Button variant="contained" size="large" onClick={onSubmitAnswer} sx={{ marginLeft: 'auto' }} disabled={!canSubmit || !answer}>
-              SUBMIT ANSWER
+              {!canSubmit ? 'SUBMITED' : 'SUBMIT ANSWER'}
             </Button>
           )}
 

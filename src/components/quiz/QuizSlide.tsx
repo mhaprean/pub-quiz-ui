@@ -63,6 +63,8 @@ const StyledQuizSlide = styled('div')`
 
     .result {
       margin-left: auto;
+      display: flex;
+      align-items: center;
 
       .correct {
         color: ${(props) => props.theme.palette.success.main};

@@ -21,11 +21,11 @@ const HostRoomHeader = ({ password, total }: IPropsHostRoomHeader) => {
         <Typography variant="subtitle2">Room password:</Typography>
         <Typography variant="h4">{password}</Typography>
       </div>
-      <div>
+      {/* <div>
         <Typography variant="subtitle2">
           Online: {total} {total > 1 ? ' Users' : ' User'}
         </Typography>
-      </div>
+      </div> */}
     </StyledHostRoomHeader>
   );
 };
