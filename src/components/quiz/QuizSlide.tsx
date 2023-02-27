@@ -55,6 +55,7 @@ const StyledQuizSlide = styled('div')`
 
     &.isWrong {
       background: ${(props) => alpha(props.theme.palette.error.main, 0.6)};
+      border-color: ${(props) => props.theme.palette.error.main};
     }
 
     &.correctAnswer {
