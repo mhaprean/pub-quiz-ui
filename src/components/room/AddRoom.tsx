@@ -148,7 +148,7 @@ const AddRoom = ({ password = '', onRoomCreated = () => {} }: IPropsAddRoom) => 
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={tab} onChange={changeTab} aria-label="basic tabs example">
                 <Tab label="Created by me" value={'myquizes'} />
-                <Tab label="Default quizes" value={'default'} />
+                <Tab label="Public quizes" value={'default'} />
               </Tabs>
             </Box>
             {tab === 'myquizes' && <QuizList quizes={myQuizes || []} selectedQuiz={selectedQuiz} onSelectQuiz={setSelectedQuiz} />}
