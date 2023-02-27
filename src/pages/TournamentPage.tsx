@@ -48,7 +48,7 @@ const TournamentPage = () => {
             <React.Fragment key={game._id}>
               {(idx === 0 || !isSameDay(game.createdAt, data.games[idx - 1].createdAt)) && <DayHeader date={game.createdAt} />}
 
-              <QuizResults users={game.results} title={'Game: ' + game.title} key={idx} />
+              <QuizResults users={game.results} title={game.title} gameId={game._id} key={idx} />
             </React.Fragment>
           ))}
         </>

@@ -8,6 +8,7 @@ import HostRoomHeader from '../components/game/HostRoomHeader';
 import { IUser } from '../redux/authSlice';
 import { Link } from 'react-router-dom';
 import EndedQuiz from '../components/quiz/EndedQuiz';
+import NavigateBack from '../components/NavigateBack';
 
 interface IRoomUser {
   id: string;
@@ -157,6 +158,14 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     };
   }, [isConnected]);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }, []);
+
   /**
    *
    * function for game host
@@ -209,9 +218,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         {/* This is for the room host.
           Alaways display the room password and the total number of users. 
         */}
-        {isHost && currentGame?.password && !currentGame?.ended && (
-          <HostRoomHeader password={currentGame.password} total={0} />
-        )}
+        {isHost && currentGame?.password && !currentGame?.ended && <HostRoomHeader password={currentGame.password} total={0} />}
 
         {isHost && !gameStarted && !currentGame?.ended && (
           <div>
@@ -243,9 +250,10 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         )}
 
         {(showResults || currentGame?.ended) && (
-          <div>
+          <>
+            <NavigateBack />
             <QuizResults users={users.length > 0 ? users : currentGame?.results || []} total={currentGame.quiz.total} />
-          </div>
+          </>
         )}
 
         {currentGame?.ended && currentGame?.quiz.questions && currentGame?.quiz.questions.length > 0 && (
