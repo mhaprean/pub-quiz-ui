@@ -26,7 +26,6 @@ interface IRoomGame {
   currentQuestion: IQuestion | null;
   questionIdx: number;
   questionAnsweredBy: string[];
-  onlineUsers: string[];
   users: {
     [key: string]: IRoomUser;
   };
@@ -84,6 +83,8 @@ interface IPropsRoom {
 const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false, isConnected, userAnswers }: IPropsRoom) => {
   const [showResults, setShowResults] = useState(false);
 
+  const [totalParticipants, setTotalParticipants] = useState(0);
+
   const [users, setUsers] = useState<IResultsUser[]>([]);
 
   const [question, setQuestion] = useState<IQuestion | null>(null);
@@ -129,6 +130,10 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       onRefetch();
     });
 
+    socket.on('USER_JOINED', ({ totalUsers }: { totalUsers: number }) => {
+      setTotalParticipants(totalUsers);
+    });
+
     socket.on('WELCOME_BACK', ({ game }: IGameRestore) => {
       const isAllowedSubmit = !game.questionAnsweredBy.includes(user._id);
 
@@ -136,6 +141,10 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         const userResponse = game.users[user._id].answers[game.currentQuestion._id].answer;
         setAnswer(userResponse);
       }
+
+      const totalUsers = Object.keys(game.users);
+      setTotalParticipants(totalUsers.length);
+
       setGameStarted(game.started);
       setCanSubmit(isAllowedSubmit);
       setQuestion(game.currentQuestion);
@@ -153,8 +162,6 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
       socket.off('ANSWER_SUBMITED');
 
       socket.off('join_room');
-
-      socket.emit('leave_room', joinData);
     };
   }, [isConnected]);
 
@@ -218,7 +225,9 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
         {/* This is for the room host.
           Alaways display the room password and the total number of users. 
         */}
-        {isHost && currentGame?.password && !currentGame?.ended && <HostRoomHeader password={currentGame.password} total={0} />}
+        {isHost && currentGame?.password && !currentGame?.ended && (
+          <HostRoomHeader password={currentGame.password} total={totalParticipants} />
+        )}
 
         {isHost && !gameStarted && !currentGame?.ended && (
           <div>
