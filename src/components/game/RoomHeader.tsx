@@ -7,6 +7,7 @@ const BASE_URL = import.meta.env.BASE_URL;
 
 const StyledRoomHeader = styled(Paper)`
   padding: 20px;
+  margin-top: 20px;
 
   .title {
     display: flex;
@@ -50,7 +51,7 @@ const RoomHeader = ({ game }: IPropsRoomHeader) => {
 
       <div className="game-host">
         <Typography variant="caption" className="host">
-          Host:
+          Hosted by:
         </Typography>
         <Chip size="small" avatar={<Avatar alt="" src={BASE_URL + game.host.image} />} label={game.host.name} variant="outlined" />
       </div>

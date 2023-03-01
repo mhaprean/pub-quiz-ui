@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import DayHeader from '../components/game/DayHeader';
 import Loader from '../components/Loader';
+import NavigateBack from '../components/NavigateBack';
 import QuizResults from '../components/quiz/QuizResults';
 import TournamentHeader from '../components/tournament/TournamentHeader';
 import TournamentResults from '../components/tournament/TournamentResults';
@@ -42,6 +43,7 @@ const TournamentPage = () => {
 
       {!isLoading && data && (
         <>
+          <NavigateBack />
           <TournamentHeader tournament={data} />
           <TournamentResults users={getScore(data.participants, data.games)} />
           {data.games
