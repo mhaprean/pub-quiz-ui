@@ -44,13 +44,15 @@ const TournamentPage = () => {
         <>
           <TournamentHeader tournament={data} />
           <TournamentResults users={getScore(data.participants, data.games)} />
-          {data.games.map((game, idx) => (
-            <React.Fragment key={game._id}>
-              {(idx === 0 || !isSameDay(game.createdAt, data.games[idx - 1].createdAt)) && <DayHeader date={game.createdAt} />}
+          {data.games
+            .filter((game) => game.quiz)
+            .map((game, idx) => (
+              <React.Fragment key={game._id}>
+                {(idx === 0 || !isSameDay(game.createdAt, data.games[idx - 1].createdAt)) && <DayHeader date={game.createdAt} />}
 
-              <QuizResults users={game.results} title={game.title} gameId={game._id} key={idx} />
-            </React.Fragment>
-          ))}
+                <QuizResults users={game.results} title={game.title} gameId={game._id} key={idx} />
+              </React.Fragment>
+            ))}
         </>
       )}
     </div>

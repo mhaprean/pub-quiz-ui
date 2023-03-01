@@ -77,9 +77,7 @@ export interface IGame {
   active: true;
   ended: boolean;
   participants: string[];
-  // quiz: string;
   host: string;
-
   results: IResultsUser[];
   quiz: {
     _id: string;

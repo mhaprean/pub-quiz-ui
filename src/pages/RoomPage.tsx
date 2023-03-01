@@ -5,7 +5,6 @@ import { useGetCurrentGameQuery, useGetCurrentGameResultsQuery, useJoinGameMutat
 import { useAppSelector } from '../redux/hooks';
 import Room from './Room';
 import { Socket } from 'socket.io-client';
-import { CircularProgress } from '@mui/material';
 import Loader from '../components/Loader';
 
 interface IPropsRoomPage {
