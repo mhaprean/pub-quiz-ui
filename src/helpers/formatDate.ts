@@ -3,8 +3,6 @@ export const formatDate = (date: string) => {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
   });
 };
 

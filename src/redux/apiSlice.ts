@@ -100,6 +100,7 @@ export interface ISingleGame extends Omit<IGame, 'host'> {
     name: string;
     email: string;
     role: string;
+    image: string;
     createdAt: string;
     updatedAt: string;
   };

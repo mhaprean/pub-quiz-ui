@@ -9,6 +9,7 @@ import { IUser } from '../redux/authSlice';
 import { Link } from 'react-router-dom';
 import EndedQuiz from '../components/quiz/EndedQuiz';
 import NavigateBack from '../components/NavigateBack';
+import RoomHeader from '../components/game/RoomHeader';
 
 interface IRoomUser {
   id: string;
@@ -258,9 +259,10 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
           </div>
         )}
 
-        {(showResults || currentGame?.ended) && (
+        {(showResults || currentGame.ended) && (
           <>
             <NavigateBack />
+            <RoomHeader game={currentGame} />
             <QuizResults users={users.length > 0 ? users : currentGame?.results || []} total={currentGame.quiz.total} />
           </>
         )}
@@ -269,7 +271,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
           <EndedQuiz questions={currentGame.quiz.questions} userAnswers={userAnswers} />
         )}
 
-        <Box className="submit-button" sx={{ marginTop: '30px', display: 'flex' }}>
+        <Box className="submit-button" sx={{ marginTop: '30px', marginBottom: '50px', display: 'flex' }}>
           {isHost && gameStarted && hasMoreQuestions && (
             <Button variant="contained" size="large" onClick={onNextQuestion} sx={{ marginLeft: 'auto' }}>
               NEXT QUESTION
@@ -288,13 +290,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
             </Button>
           )}
 
-          {currentGame.ended && (
-            <Link to="/">
-              <Button variant="contained" size="large">
-                Return to homepage
-              </Button>
-            </Link>
-          )}
+          {currentGame.ended && <NavigateBack />}
         </Box>
       </div>
     </div>
