@@ -7,6 +7,9 @@ import { IResultsUser } from '../../redux/apiSlice';
 const BASE_URL = import.meta.env.BASE_URL;
 
 const StyledTournamentResults = styled('div')`
+  .title {
+    margin-top: 20px;
+  }
   .player {
     display: flex;
     align-items: center;
@@ -29,12 +32,13 @@ const StyledTournamentResults = styled('div')`
 
 interface IPropsTournamentResults {
   users: IResultsUser[];
+  title?: string;
 }
 
-const TournamentResults = ({ users }: IPropsTournamentResults) => {
+const TournamentResults = ({ users, title = '' }: IPropsTournamentResults) => {
   return (
     <StyledTournamentResults className="TournamentResults">
-      {users.length > 0 && <Typography>Leaderboard:</Typography>}
+      {users.length > 0 && <Typography className="title">{title ? title : 'Leaderboard: '}</Typography>}
       {users.length === 0 && <Typography variant="subtitle2">No users played this tournament</Typography>}
 
       {users.map((user, idx) => (
