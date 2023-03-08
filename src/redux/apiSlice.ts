@@ -55,6 +55,7 @@ export interface IQuiz {
   createdAt: string;
   updatedAt: string;
   total: number;
+  public: boolean;
 
   questions: IQuestion[];
 }
@@ -137,6 +138,8 @@ interface IGameResult {
 interface IDeleteQuizResponse {}
 
 interface ICreateTournamentResponse {}
+
+interface IPublishQuizResponse {}
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
@@ -242,6 +245,14 @@ export const backendApi = createApi({
       invalidatesTags: ['Quiz'],
     }),
 
+    publishQuiz: builder.mutation<IPublishQuizResponse, { quizId: string }>({
+      query: ({ quizId }) => ({
+        url: `quiz/publish/${quizId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Quiz'],
+    }),
+
     createGame: builder.mutation<ICreateGameResponse, { quiz: string; title: string; password: string; tournament: string }>({
       query: (data) => ({
         url: 'games/create',
@@ -315,6 +326,7 @@ export const {
   useGetTournamentQuery,
   useDeleteGameMutation,
   useDeleteTournamentMutation,
+  usePublishQuizMutation,
 } = backendApi;
 
 export default backendApi;
