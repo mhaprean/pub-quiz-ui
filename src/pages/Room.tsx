@@ -126,9 +126,11 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
     });
 
     socket.on('QUIZ_ENDED', (data: IGameEndedPayload) => {
-      setUsers(data.results);
-      setShowResults(true);
-      onRefetch();
+      if (!currentGame.ended) {
+        setUsers(data.results);
+        setShowResults(true);
+        onRefetch();
+      }
     });
 
     socket.on('USER_JOINED', ({ totalUsers }: { totalUsers: number }) => {
