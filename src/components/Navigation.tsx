@@ -40,7 +40,7 @@ const Navigation = () => {
 
   const authState = useAppSelector((root) => root.auth);
 
-  const { data: profile, isLoading, isError } = useGetMyProfileQuery({});
+  const { data: profile, isLoading, isError } = useGetMyProfileQuery({}, { skip: !authState.isAuth });
 
   const dispatch = useAppDispatch();
 
