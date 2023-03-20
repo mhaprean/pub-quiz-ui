@@ -141,6 +141,14 @@ interface ICreateTournamentResponse {}
 
 interface IPublishQuizResponse {}
 
+interface IForgotPasswordResponse {
+  message: string;
+}
+
+interface IResetPasswordResponse {
+  message: string;
+}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 export const backendApi = createApi({
@@ -223,6 +231,22 @@ export const backendApi = createApi({
     confirmAccount: builder.mutation<IConfirmAccountResponse, { userId: string; token: string }>({
       query: (data) => ({
         url: 'auth/confirm',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+
+    forgotPassword: builder.mutation<IForgotPasswordResponse, { email: string }>({
+      query: (data) => ({
+        url: 'auth/forgot-password',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+
+    resetPassword: builder.mutation<IResetPasswordResponse, { userId: string; token: string; password: string }>({
+      query: (data) => ({
+        url: 'auth/reset-password',
         method: 'POST',
         body: data,
       }),
@@ -327,6 +351,8 @@ export const {
   useDeleteGameMutation,
   useDeleteTournamentMutation,
   usePublishQuizMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = backendApi;
 
 export default backendApi;
