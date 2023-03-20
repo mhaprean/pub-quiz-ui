@@ -18,12 +18,19 @@ const ResetPassword = () => {
 
       return false;
     }
+    if (response.isLoading) {
+      return false;
+    }
+
     try {
       if (token && id) {
         const res = await resetPassword({ token: token, userId: id, password }).unwrap();
         setError('');
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error && error.data && error.data.message) {
+        setError(error.data.message);
+      }
       console.log(error);
     }
   };
@@ -56,15 +63,26 @@ const ResetPassword = () => {
           fullWidth
           size="large"
           onClick={handleResetPassword}
+          disabled={response.isSuccess}
         >
-          Reset password
+          {response.isSuccess ? 'Password reseted' : 'Reset password'}
         </Button>
       </form>
-      {id} {token}
+
+      {!response.isSuccess && error.length > 0 && (
+        <Alert severity="error" sx={{ marginTop: '20px' }}>
+          <AlertTitle>Error!</AlertTitle>
+          {error}
+        </Alert>
+      )}
+
       {response.isSuccess && (
-        <Alert severity="success">
+        <Alert severity="success" sx={{ marginTop: '20px' }}>
           <AlertTitle>Success!</AlertTitle>
-          {response.data.message}. Return to <Link to="/">Homepage</Link>
+          {response.data.message}. Return to{' '}
+          <Link to="/">
+            <strong>Homepage</strong>
+          </Link>
         </Alert>
       )}
     </div>

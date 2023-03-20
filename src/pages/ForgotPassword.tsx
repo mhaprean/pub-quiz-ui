@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, Box, Button, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useForgotPasswordMutation } from '../redux/apiSlice';
 
 const ForgotPassword = () => {
@@ -18,13 +19,19 @@ const ForgotPassword = () => {
   };
 
   const handleForgotPassword = async () => {
-    try {
-      const errorEmail = validateEmail(email);
+    const errorEmail = validateEmail(email);
 
-      if (errorEmail) {
-        setError(errorEmail);
-        return null;
-      }
+    if (errorEmail) {
+      setError(errorEmail);
+      return false;
+    }
+
+    if (response.isLoading) {
+      return false;
+    }
+
+    try {
+      console.log('!!!!!! call forgot pass mutation');
 
       const res = await forgotPassword({ email: email }).unwrap();
 
@@ -65,21 +72,26 @@ const ForgotPassword = () => {
           fullWidth
           size="large"
           onClick={handleForgotPassword}
+          disabled={response.isSuccess}
         >
-          Submit
+          {response.isSuccess ? 'Submited' : 'Submit'}
         </Button>
       </form>
 
       {error && (
-        <Typography variant="subtitle2" color="error">
+        <Alert severity="error" sx={{ marginTop: '20px' }}>
+          <AlertTitle>Error!</AlertTitle>
           {error}
-        </Typography>
+        </Alert>
       )}
 
       {response.isSuccess && (
-        <Alert severity="success">
+        <Alert severity="success" sx={{ marginTop: '20px' }}>
           <AlertTitle>Success!</AlertTitle>
-          {response.data.message}
+          {response.data.message}. Return to{' '}
+          <Link to="/">
+            <strong> Homepage</strong>
+          </Link>
         </Alert>
       )}
     </div>
