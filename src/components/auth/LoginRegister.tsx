@@ -1,6 +1,7 @@
-import { Alert, AlertTitle, Button, Tab, Tabs, TextField } from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useLoginUserMutation, useRegisterUserMutation } from '../../redux/apiSlice';
 import { IUser, login, setUser } from '../../redux/authSlice';
 import { useAppDispatch } from '../../redux/hooks';
@@ -174,6 +175,16 @@ const LoginRegister = () => {
               <AlertTitle>Error!</AlertTitle>
               {error}
             </Alert>
+          )}
+
+          {tab === 'login' && (
+            <Box sx={{ marginTop: '25px' }}>
+              <Link to={'/forgot-password'}>
+                <Typography color={'primary'} variant="body2">
+                  Forgot password
+                </Typography>
+              </Link>
+            </Box>
           )}
 
           <div>

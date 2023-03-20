@@ -22,6 +22,7 @@ const StyledAvatars = styled('div')`
     justify-content: center;
     border: 2px solid transparent;
     border-radius: 50%;
+    cursor: pointer;
 
     &.selected {
       border: 2px solid ${(props) => props.theme.palette.primary.main};
