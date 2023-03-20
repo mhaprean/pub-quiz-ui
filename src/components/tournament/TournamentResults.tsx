@@ -7,6 +7,7 @@ import { IResultsUser } from '../../redux/apiSlice';
 const BASE_URL = import.meta.env.BASE_URL;
 
 const StyledTournamentResults = styled('div')`
+  margin-bottom: 50px;
   .title {
     margin-top: 20px;
   }

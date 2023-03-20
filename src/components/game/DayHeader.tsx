@@ -4,7 +4,7 @@ import { getFormatedDate } from '../../helpers/formatDate';
 
 const StyledDayHeader = styled(Paper)`
   padding: 10px;
-  margin-top: 50px;
+  margin-top: 20px;
 
   background: ${props => alpha(props.theme.palette.primary.main, 0.4)};
 `;
