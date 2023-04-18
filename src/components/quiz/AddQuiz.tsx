@@ -2,6 +2,11 @@ import { Alert, AlertTitle, Button, FormControl, InputLabel, MenuItem, Select, T
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { IQuizQuestion, useCreateQuizMutation } from '../../redux/apiSlice';
+import React from 'react';
+
+import CodeMirror from '@uiw/react-codemirror';
+import { json } from '@codemirror/lang-json';
+import { okaidia } from '@uiw/codemirror-theme-okaidia';
 
 interface IValidQuiz {
   questions: {
@@ -41,24 +46,21 @@ function validateQuiz(quiz: IValidQuiz): string {
   return '';
 }
 
-const initialValue = `
-{
+const initialValue = `{
   "questions": [
     {
-      "category": "Politics",
-      "type": "boolean",
-      "difficulty": "easy",
-      "question": "Denmark has a monarch.",
+      "question": "'Viva La Vida' is a song played by Coldplay.",
+      "song": "https://cdns-preview-a.dzcdn.net/stream/c-ab0b3c336efc5e72a8eb5f783f383a85-4.mp3",
+      "image": "https://e-cdns-images.dzcdn.net/images/cover/eede3cd0dc3a5a87c7a5b1085b022e2d/250x250-000000-80-0-0.jpg",
       "correct_answer": "True",
       "incorrect_answers": [
         "False"
       ]
     },
     {
-      "category": "Politics",
-      "type": "boolean",
-      "difficulty": "easy",
-      "question": "The 2016 United States Presidential Election is the first time Hillary Clinton has run for President.",
+      "question": "The song 'Say it right' was produced by Pharrell Williams.",
+      "image": "https://e-cdns-images.dzcdn.net/images/cover/1d3625d9f19527440769e7f8cc09db85/250x250-000000-80-0-0.jpg",
+      "song": "https://cdns-preview-c.dzcdn.net/stream/c-ce9b0d37c7cab9ba54a1befb176a3ea6-11.mp3",
       "correct_answer": "False",
       "incorrect_answers": [
         "True"
@@ -87,6 +89,13 @@ const StyledAddQuiz = styled('div')`
     margin-top: 30px;
     height: 50px;
   }
+
+  .code-mirror {
+    margin-top: 30px;
+    padding: 5px;
+    border: 1px solid ${(props) => props.theme.palette.text.disabled};
+    border-radius: 4px;
+  }
 `;
 
 const AddQuiz = () => {
@@ -99,9 +108,9 @@ const AddQuiz = () => {
 
   const [createQuiz, { isError, isSuccess, isLoading }] = useCreateQuizMutation();
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
-  };
+  const onChange = React.useCallback((value: string, viewUpdate: {}) => {
+    setValue(value);
+  }, []);
 
   const getId = () => (Math.random() + 1).toString(36).substring(10);
 
@@ -190,7 +199,7 @@ const AddQuiz = () => {
         </Select>
       </FormControl>
 
-      <textarea className="textarea" value={value} onChange={handleChange} />
+      <CodeMirror value={value} className="code-mirror" extensions={[json()]} theme={okaidia} onChange={onChange} />
 
       {error && (
         <Alert severity="error" sx={{ marginTop: '20px' }}>
