@@ -5,7 +5,9 @@ import { decodeHtml } from '../../helpers/decodeHTML';
 import { IQuestion } from '../../redux/apiSlice';
 
 import { CheckCircle as CheckCircleIcon, Cancel as CancelIcon } from '@mui/icons-material';
-import ReactAudioPlayer from 'react-audio-player';
+
+import AudioPlayerOrig from 'react-audio-player';
+const ReactAudioPlayer = process.env.NODE_ENV === 'production' ? (AudioPlayerOrig as any).default : AudioPlayerOrig;
 
 interface IPropsQuizSlide {
   question: IQuestion;
@@ -135,7 +137,7 @@ const QuizSlide = ({
         </div>
       )}
 
-      {/* {question.song && (isHost || ended) && <ReactAudioPlayer className="player" src={question.song} controls />} */}
+      {question.song && (isHost || ended) && <ReactAudioPlayer className="player" src={question.song} controls />}
 
       <div className="answers">
         {question.answers.map((ans, idx) => (
