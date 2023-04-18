@@ -6,8 +6,10 @@ import { IQuestion } from '../../redux/apiSlice';
 
 import { CheckCircle as CheckCircleIcon, Cancel as CancelIcon } from '@mui/icons-material';
 
+// issue with react-audio-player
+// works great in development mode, throws error in production: Minified React error #130
+// workaround: https://github.com/justinmc/react-audio-player/issues/164
 import AudioPlayerOrig from 'react-audio-player';
-
 const ENV = import.meta.env.VITE_ENV || 'dev';
 const ReactAudioPlayer = ENV === 'production' ? (AudioPlayerOrig as any).default : AudioPlayerOrig;
 
