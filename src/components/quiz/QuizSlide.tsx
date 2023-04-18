@@ -135,7 +135,7 @@ const QuizSlide = ({
         </div>
       )}
 
-      {question.song && (isHost || ended) && <ReactAudioPlayer className="player" src={question.song} controls />}
+      {/* {question.song && (isHost || ended) && <ReactAudioPlayer className="player" src={question.song} controls />} */}
 
       <div className="answers">
         {question.answers.map((ans, idx) => (
