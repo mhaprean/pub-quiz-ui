@@ -42,6 +42,8 @@ export interface IQuestion {
   question: string;
   answers: string[];
   correct_answer: string;
+  image: string;
+  song: string;
   _id: string;
 }
 
@@ -118,6 +120,8 @@ export interface IQuizQuestion {
   question: string;
   answers: string[];
   correct_answer: string;
+  song: string;
+  image: string;
 }
 
 interface ICreateQuizResponse {}

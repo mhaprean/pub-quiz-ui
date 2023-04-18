@@ -5,6 +5,7 @@ import { decodeHtml } from '../../helpers/decodeHTML';
 import { IQuestion } from '../../redux/apiSlice';
 
 import { CheckCircle as CheckCircleIcon, Cancel as CancelIcon } from '@mui/icons-material';
+import ReactAudioPlayer from 'react-audio-player';
 
 interface IPropsQuizSlide {
   question: IQuestion;
@@ -14,6 +15,7 @@ interface IPropsQuizSlide {
   answer: string;
   ended?: boolean;
   userPick?: string;
+  isHost?: boolean;
 }
 
 const StyledQuizSlide = styled('div')`
@@ -79,9 +81,36 @@ const StyledQuizSlide = styled('div')`
       flex-basis: 45%;
     }
   }
+
+  .player {
+    width: 100%;
+    padding: 10px 50px;
+  }
+
+  .image-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+
+    .image {
+      display: block;
+      max-width: 100%;
+      max-height: 400px;
+      margin: auto;
+    }
+  }
 `;
 
-const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0, answer, ended = false, userPick }: IPropsQuizSlide) => {
+const QuizSlide = ({
+  question,
+  onPickAnswer,
+  pickable = true,
+  questionIndex = 0,
+  answer,
+  ended = false,
+  isHost = false,
+  userPick,
+}: IPropsQuizSlide) => {
   const options = ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.'];
 
   const handlePickAnswer = (answer: string) => {
@@ -99,6 +128,14 @@ const QuizSlide = ({ question, onPickAnswer, pickable = true, questionIndex = 0,
           {decodeHtml(question.question)}
         </Typography>
       </div>
+
+      {question.image && (
+        <div className="image-box">
+          <img className="image" src={question.image} alt="" />
+        </div>
+      )}
+
+      {question.song && (isHost || ended) && <ReactAudioPlayer className="player" src={question.song} controls />}
 
       <div className="answers">
         {question.answers.map((ans, idx) => (

@@ -256,6 +256,7 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
               question={question}
               onPickAnswer={setAnswer}
               pickable={!isHost && canSubmit}
+              isHost={isHost}
               questionIndex={currentQuestionIdx}
             />
           </div>

@@ -8,6 +8,8 @@ interface IValidQuiz {
     question: string;
     incorrect_answers: string[];
     correct_answer: string;
+    image: string;
+    song: string;
   }[];
 }
 
@@ -108,7 +110,7 @@ const AddQuiz = () => {
       const json = JSON.parse(jsonString);
 
       const res: IQuizQuestion[] = json.questions.map(
-        (q: { question: string; correct_answer: string; incorrect_answers: string[]; id: string }) => {
+        (q: { question: string; correct_answer: string; incorrect_answers: string[]; id: string; song: string; image: string }) => {
           let answers = [q.correct_answer, ...q.incorrect_answers];
 
           let shuffled = answers
@@ -116,7 +118,14 @@ const AddQuiz = () => {
             .sort((a, b) => a.sort - b.sort)
             .map(({ value }) => value);
 
-          return { question: q.question, answers: shuffled, correct_answer: q.correct_answer, id: getId() };
+          return {
+            question: q.question,
+            answers: shuffled,
+            correct_answer: q.correct_answer,
+            id: getId(),
+            song: q.song || '',
+            image: q.image || '',
+          };
         }
       );
 
