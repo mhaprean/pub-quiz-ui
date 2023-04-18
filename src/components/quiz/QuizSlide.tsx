@@ -7,7 +7,9 @@ import { IQuestion } from '../../redux/apiSlice';
 import { CheckCircle as CheckCircleIcon, Cancel as CancelIcon } from '@mui/icons-material';
 
 import AudioPlayerOrig from 'react-audio-player';
-const ReactAudioPlayer = process.env.NODE_ENV === 'production' ? (AudioPlayerOrig as any).default : AudioPlayerOrig;
+
+const ENV = import.meta.env.VITE_ENV || 'dev';
+const ReactAudioPlayer = ENV === 'production' ? (AudioPlayerOrig as any).default : AudioPlayerOrig;
 
 interface IPropsQuizSlide {
   question: IQuestion;
