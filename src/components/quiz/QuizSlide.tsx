@@ -90,7 +90,11 @@ const StyledQuizSlide = styled('div')`
 
   .player {
     width: 100%;
-    padding: 10px 50px;
+    padding: 10px 10px;
+
+    @media screen and (min-width: 800px) {
+      padding: 10px 50px;
+    }
   }
 
   .image-box {
