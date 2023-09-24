@@ -1,12 +1,21 @@
-import { Alert, AlertTitle, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { useState } from 'react';
-import { IQuizQuestion, useCreateQuizMutation } from '../../redux/apiSlice';
-import React from 'react';
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useState } from "react";
+import { IQuizQuestion, useCreateQuizMutation } from "../../redux/apiSlice";
+import React from "react";
 
-import CodeMirror from '@uiw/react-codemirror';
-import { json } from '@codemirror/lang-json';
-import { okaidia } from '@uiw/codemirror-theme-okaidia';
+import CodeMirror from "@uiw/react-codemirror";
+import { json } from "@codemirror/lang-json";
+import { okaidia } from "@uiw/codemirror-theme-okaidia";
 
 interface IValidQuiz {
   questions: {
@@ -15,6 +24,7 @@ interface IValidQuiz {
     correct_answer: string;
     image: string;
     song: string;
+    video: string;
   }[];
 }
 
@@ -24,7 +34,7 @@ function validateQuiz(quiz: IValidQuiz): string {
   }
 
   for (const question of quiz.questions) {
-    if (!question.question || typeof question.question !== 'string') {
+    if (!question.question || typeof question.question !== "string") {
       return "The 'question' property of a question is missing or not a string.";
     }
 
@@ -33,17 +43,20 @@ function validateQuiz(quiz: IValidQuiz): string {
     }
 
     for (const answer of question.incorrect_answers) {
-      if (!answer || typeof answer !== 'string') {
-        return 'An incorrect answer is missing or not a string.';
+      if (!answer || typeof answer !== "string") {
+        return "An incorrect answer is missing or not a string.";
       }
     }
 
-    if (!question.correct_answer || typeof question.correct_answer !== 'string') {
+    if (
+      !question.correct_answer ||
+      typeof question.correct_answer !== "string"
+    ) {
       return "The 'correct_answer' property of a question is missing or not a string.";
     }
   }
 
-  return '';
+  return "";
 }
 
 const initialValue = `{
@@ -52,6 +65,7 @@ const initialValue = `{
       "question": "'Viva La Vida' is a song played by Coldplay.",
       "song": "https://cdns-preview-a.dzcdn.net/stream/c-ab0b3c336efc5e72a8eb5f783f383a85-4.mp3",
       "image": "https://e-cdns-images.dzcdn.net/images/cover/eede3cd0dc3a5a87c7a5b1085b022e2d/250x250-000000-80-0-0.jpg",
+      "video": "",
       "correct_answer": "True",
       "incorrect_answers": [
         "False"
@@ -61,6 +75,7 @@ const initialValue = `{
       "question": "The song 'Say it right' was produced by Pharrell Williams.",
       "image": "https://e-cdns-images.dzcdn.net/images/cover/1d3625d9f19527440769e7f8cc09db85/250x250-000000-80-0-0.jpg",
       "song": "https://cdns-preview-c.dzcdn.net/stream/c-ce9b0d37c7cab9ba54a1befb176a3ea6-11.mp3",
+      "video": "",
       "correct_answer": "False",
       "incorrect_answers": [
         "True"
@@ -70,7 +85,7 @@ const initialValue = `{
 }
 `;
 
-const StyledAddQuiz = styled('div')`
+const StyledAddQuiz = styled("div")`
   padding-bottom: 100px;
   .textarea {
     width: 100%;
@@ -100,13 +115,14 @@ const StyledAddQuiz = styled('div')`
 
 const AddQuiz = () => {
   const [value, setValue] = useState(initialValue);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
-  const [category, setCategory] = useState('');
-  const [title, setTitle] = useState('');
-  const [difficulty, setDifficulty] = useState('easy');
+  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
+  const [difficulty, setDifficulty] = useState("easy");
 
-  const [createQuiz, { isError, isSuccess, isLoading }] = useCreateQuizMutation();
+  const [createQuiz, { isError, isSuccess, isLoading }] =
+    useCreateQuizMutation();
 
   const onChange = React.useCallback((value: string, viewUpdate: {}) => {
     setValue(value);
@@ -119,7 +135,15 @@ const AddQuiz = () => {
       const json = JSON.parse(jsonString);
 
       const res: IQuizQuestion[] = json.questions.map(
-        (q: { question: string; correct_answer: string; incorrect_answers: string[]; id: string; song: string; image: string }) => {
+        (q: {
+          question: string;
+          correct_answer: string;
+          incorrect_answers: string[];
+          id: string;
+          video: string;
+          song: string;
+          image: string;
+        }) => {
           let answers = [q.correct_answer, ...q.incorrect_answers];
 
           let shuffled = answers
@@ -132,8 +156,9 @@ const AddQuiz = () => {
             answers: shuffled,
             correct_answer: q.correct_answer,
             id: getId(),
-            song: q.song || '',
-            image: q.image || '',
+            song: q.song || "",
+            image: q.image || "",
+            video: q.video || "",
           };
         }
       );
@@ -151,9 +176,9 @@ const AddQuiz = () => {
       const validated = validateQuiz(json);
 
       setError(validated);
-      return validated === '';
+      return validated === "";
     } catch (error) {
-      setError('Invalid JSON object.');
+      setError("Invalid JSON object.");
       return false;
     }
   };
@@ -162,14 +187,19 @@ const AddQuiz = () => {
     const isValid = handleValidateJSONQuestions();
 
     if (title.length < 3) {
-      setError('Title must have at least 3 characters.');
+      setError("Title must have at least 3 characters.");
       return false;
     }
 
     if (isValid) {
       const questions = transformQuestions(value);
 
-      const createdQuiz = await createQuiz({ category: category, difficulty: difficulty, title: title, questions: questions }).unwrap();
+      const createdQuiz = await createQuiz({
+        category: category,
+        difficulty: difficulty,
+        title: title,
+        questions: questions,
+      }).unwrap();
     }
   };
 
@@ -181,8 +211,18 @@ const AddQuiz = () => {
           Quiz was succesfuly <strong>created!</strong>
         </Alert>
       )}
-      <TextField helperText="" label="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-      <TextField helperText="" label="Category" value={category} onChange={(e) => setCategory(e.target.value)} />
+      <TextField
+        helperText=""
+        label="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <TextField
+        helperText=""
+        label="Category"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      />
 
       <FormControl fullWidth>
         <InputLabel id="difficulty">Difficulty</InputLabel>
@@ -193,23 +233,36 @@ const AddQuiz = () => {
           label="Difficulty"
           onChange={(e) => setDifficulty(e.target.value)}
         >
-          <MenuItem value={'easy'}>Easy</MenuItem>
-          <MenuItem value={'medium'}>Medium</MenuItem>
-          <MenuItem value={'hard'}>Hard</MenuItem>
+          <MenuItem value={"easy"}>Easy</MenuItem>
+          <MenuItem value={"medium"}>Medium</MenuItem>
+          <MenuItem value={"hard"}>Hard</MenuItem>
         </Select>
       </FormControl>
 
-      <CodeMirror value={value} className="code-mirror" extensions={[json()]} theme={okaidia} onChange={onChange} />
+      <CodeMirror
+        value={value}
+        className="code-mirror"
+        extensions={[json()]}
+        theme={okaidia}
+        onChange={onChange}
+      />
 
       {error && (
-        <Alert severity="error" sx={{ marginTop: '20px' }}>
+        <Alert severity="error" sx={{ marginTop: "20px" }}>
           <AlertTitle>Error!</AlertTitle>
           {error}
         </Alert>
       )}
 
-      <Button type="submit" variant="contained" fullWidth size="large" onClick={handleCreateQuiz} disabled={isLoading}>
-        {isLoading ? 'Loading...' : 'Create Quiz'}
+      <Button
+        type="submit"
+        variant="contained"
+        fullWidth
+        size="large"
+        onClick={handleCreateQuiz}
+        disabled={isLoading}
+      >
+        {isLoading ? "Loading..." : "Create Quiz"}
       </Button>
     </StyledAddQuiz>
   );

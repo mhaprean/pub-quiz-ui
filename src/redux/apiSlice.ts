@@ -44,6 +44,7 @@ export interface IQuestion {
   correct_answer: string;
   image: string;
   song: string;
+  video: string;
   _id: string;
 }
 

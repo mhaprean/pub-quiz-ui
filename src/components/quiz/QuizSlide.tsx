@@ -10,6 +10,7 @@ import { CheckCircle as CheckCircleIcon, Cancel as CancelIcon } from '@mui/icons
 // works great in development mode, throws error in production: Minified React error #130
 // workaround: https://github.com/justinmc/react-audio-player/issues/164
 import AudioPlayerOrig from 'react-audio-player';
+import ReactPlayer from 'react-player';
 const ENV = import.meta.env.VITE_ENV || 'dev';
 const ReactAudioPlayer = ENV === 'production' ? (AudioPlayerOrig as any).default : AudioPlayerOrig;
 
@@ -145,6 +146,10 @@ const QuizSlide = ({
         </div>
       )}
 
+      {question.video && (isHost || ended) && <div>
+        <ReactPlayer url={question.video} controls={true} style={{margin: 'auto'}} />
+      </div>}
+      
       {question.song && (isHost || ended) && <ReactAudioPlayer className="player" src={question.song} controls />}
 
       <div className="answers">
