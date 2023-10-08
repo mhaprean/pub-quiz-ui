@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const StyledNoRooms = styled('div')`
@@ -20,7 +20,7 @@ const StyledNoRooms = styled('div')`
 const NoRooms = () => {
   return (
     <StyledNoRooms className="NoRooms">
-      <svg viewBox="0 0 865.76 682.89">
+      {/* <svg viewBox="0 0 865.76 682.89">
         <defs>
           <filter id="b" x="444.44" y="-3646" width="198.87" height="32766" filterUnits="userSpaceOnUse" >
             <feFlood result="bg" />
@@ -510,8 +510,14 @@ const NoRooms = () => {
         <path d="M393.56,372.16a50,50,0,0,1-13.83,11.75" fill="none" stroke="#f7a48b"  />
 
         <path d="M387.77,386.35s7.09-4.09,9.63-11.87" fill="none" stroke="#f7a48b"  />
-      </svg>
-      <Typography className='no-rooms' variant="subtitle2">No rooms available yet. Please wait.</Typography>
+      </svg> */}
+      <Box sx={{width: '100%', maxWidth: '250px'}}>
+        <img src="no-rooms.svg" alt="" />
+      </Box>
+
+      <Typography className="no-rooms" variant="subtitle2">
+        No rooms available yet. Please wait.
+      </Typography>
     </StyledNoRooms>
   );
 };

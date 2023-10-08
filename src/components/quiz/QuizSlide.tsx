@@ -146,10 +146,12 @@ const QuizSlide = ({
         </div>
       )}
 
-      {question.video && (isHost || ended) && <div>
-        <ReactPlayer url={question.video} controls={true} style={{margin: 'auto'}} />
-      </div>}
-      
+      {question.video && (isHost || ended) && (
+        <div style={{ marginBottom: '20px' }}>
+          <ReactPlayer url={question.video} controls={true} style={{ margin: 'auto' }} />
+        </div>
+      )}
+
       {question.song && (isHost || ended) && <ReactAudioPlayer className="player" src={question.song} controls />}
 
       <div className="answers">
