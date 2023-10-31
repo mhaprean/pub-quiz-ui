@@ -229,7 +229,12 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
           Alaways display the room password and the total number of users. 
         */}
         {isHost && currentGame?.password && !currentGame?.ended && (
-          <HostRoomHeader password={currentGame.password} total={totalParticipants} />
+          <HostRoomHeader
+            password={currentGame.password}
+            total={totalParticipants}
+            tournamentTittle={currentGame.tournament.title}
+            gameTitle={currentGame.title}
+          />
         )}
 
         {isHost && !gameStarted && !currentGame?.ended && (
