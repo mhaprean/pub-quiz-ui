@@ -1,21 +1,15 @@
-import { useEffect, useState } from "react";
-import {
-  IQuestion,
-  IQuiz,
-  IResultsUser,
-  ISingleGame,
-  IUserAnswer,
-} from "../redux/apiSlice";
-import { Alert, AlertTitle, Box, Button, Typography } from "@mui/material";
-import QuizSlide from "../components/quiz/QuizSlide";
-import { Socket } from "socket.io-client";
-import QuizResults from "../components/quiz/QuizResults";
-import HostRoomHeader from "../components/game/HostRoomHeader";
-import { IUser } from "../redux/authSlice";
-import { Link } from "react-router-dom";
-import EndedQuiz from "../components/quiz/EndedQuiz";
-import NavigateBack from "../components/NavigateBack";
-import RoomHeader from "../components/game/RoomHeader";
+import { useEffect, useState } from 'react';
+import { IQuestion, IQuiz, IResultsUser, ISingleGame, IUserAnswer } from '../redux/apiSlice';
+import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material';
+import QuizSlide from '../components/quiz/QuizSlide';
+import { Socket } from 'socket.io-client';
+import QuizResults from '../components/quiz/QuizResults';
+import HostRoomHeader from '../components/game/HostRoomHeader';
+import { IUser } from '../redux/authSlice';
+import { Link } from 'react-router-dom';
+import EndedQuiz from '../components/quiz/EndedQuiz';
+import NavigateBack from '../components/NavigateBack';
+import RoomHeader from '../components/game/RoomHeader';
 
 interface IRoomUser {
   id: string;
@@ -87,15 +81,7 @@ interface IPropsRoom {
   onRefetch?: () => void;
 }
 
-const Room = ({
-  socket,
-  user,
-  currentGame,
-  onRefetch = () => {},
-  isHost = false,
-  isConnected,
-  userAnswers,
-}: IPropsRoom) => {
+const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false, isConnected, userAnswers }: IPropsRoom) => {
   const [showResults, setShowResults] = useState(false);
 
   const [totalParticipants, setTotalParticipants] = useState(0);
@@ -106,16 +92,13 @@ const Room = ({
 
   const [gameStarted, setGameStarted] = useState(false);
 
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState('');
 
   const [canSubmit, setCanSubmit] = useState(false);
 
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
 
-  const hasMoreQuestions =
-    currentGame &&
-    isHost &&
-    currentQuestionIdx + 1 < currentGame.quiz.questions.length;
+  const hasMoreQuestions = currentGame && isHost && currentQuestionIdx + 1 < currentGame.quiz.questions.length;
 
   useEffect(() => {
     const joinData: IJoinRoomPayload = {
@@ -125,24 +108,24 @@ const Room = ({
       isHost: isHost,
       quiz: isHost ? currentGame.quiz : null,
     };
-    socket.emit("join_room", joinData);
+    socket.emit('join_room', joinData);
 
-    socket.on("QUIZ_STARTED", (data: IStartGame) => {
+    socket.on('QUIZ_STARTED', (data: IStartGame) => {
       setGameStarted(true);
       setCanSubmit(true);
       setQuestion(data.question);
       setCurrentQuestionIdx(data.questionIdx);
     });
 
-    socket.on("NEXT_QUESTION", (data: INextQuestion) => {
+    socket.on('NEXT_QUESTION', (data: INextQuestion) => {
       setGameStarted(true);
       setCanSubmit(true);
       setQuestion(data.question);
-      setAnswer("");
+      setAnswer('');
       setCurrentQuestionIdx(data.questionIdx);
     });
 
-    socket.on("QUIZ_ENDED", (data: IGameEndedPayload) => {
+    socket.on('QUIZ_ENDED', (data: IGameEndedPayload) => {
       if (!currentGame.ended) {
         setUsers(data.results);
         setShowResults(true);
@@ -150,20 +133,15 @@ const Room = ({
       }
     });
 
-    socket.on("USER_JOINED", ({ totalUsers }: { totalUsers: number }) => {
+    socket.on('USER_JOINED', ({ totalUsers }: { totalUsers: number }) => {
       setTotalParticipants(totalUsers);
     });
 
-    socket.on("WELCOME_BACK", ({ game }: IGameRestore) => {
+    socket.on('WELCOME_BACK', ({ game }: IGameRestore) => {
       const isAllowedSubmit = !game.questionAnsweredBy.includes(user._id);
 
-      if (
-        game.currentQuestion &&
-        game.users[user._id] &&
-        game.users[user._id].answers[game.currentQuestion._id]
-      ) {
-        const userResponse =
-          game.users[user._id].answers[game.currentQuestion._id].answer;
+      if (game.currentQuestion && game.users[user._id] && game.users[user._id].answers[game.currentQuestion._id]) {
+        const userResponse = game.users[user._id].answers[game.currentQuestion._id].answer;
         setAnswer(userResponse);
       }
 
@@ -176,17 +154,17 @@ const Room = ({
       setCurrentQuestionIdx(game.questionIdx);
     });
 
-    socket.on("ANSWER_SUBMITED", (data) => {
+    socket.on('ANSWER_SUBMITED', (data) => {
       setCanSubmit(false);
     });
 
     return () => {
-      socket.off("QUIZ_STARTED");
-      socket.off("NEXT_QUESTION");
-      socket.off("QUIZ_ENDED");
-      socket.off("ANSWER_SUBMITED");
+      socket.off('QUIZ_STARTED');
+      socket.off('NEXT_QUESTION');
+      socket.off('QUIZ_ENDED');
+      socket.off('ANSWER_SUBMITED');
 
-      socket.off("join_room");
+      socket.off('join_room');
     };
   }, [isConnected]);
 
@@ -194,7 +172,7 @@ const Room = ({
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   }, []);
 
@@ -207,7 +185,7 @@ const Room = ({
       gameId: currentGame._id,
       userId: user._id,
     };
-    socket.emit("game_started", startGameData);
+    socket.emit('game_started', startGameData);
   };
 
   /**
@@ -219,7 +197,7 @@ const Room = ({
       gameId: currentGame._id,
       userId: user._id,
     };
-    socket.emit("next_question", nextQuestionPayload);
+    socket.emit('next_question', nextQuestionPayload);
   };
 
   const onSubmitAnswer = () => {
@@ -229,14 +207,14 @@ const Room = ({
       questionIdx: currentQuestionIdx,
       answer,
     };
-    socket.emit("SUBMIT_ANSWER", submitAnswerPayload);
+    socket.emit('SUBMIT_ANSWER', submitAnswerPayload);
   };
 
   const getQuizResults = () => {
     const getResults: IGetGameResultsPayload = {
       gameId: currentGame._id,
     };
-    socket.emit("GET_RESULTS", getResults);
+    socket.emit('GET_RESULTS', getResults);
     setShowResults(true);
 
     setTimeout(() => {
@@ -293,60 +271,30 @@ const Room = ({
           <>
             <NavigateBack />
             <RoomHeader game={currentGame} />
-            <QuizResults
-              users={users.length > 0 ? users : currentGame?.results || []}
-              total={currentGame.quiz.total}
-            />
+            <QuizResults users={users.length > 0 ? users : currentGame?.results || []} total={currentGame.quiz.total} />
           </>
         )}
 
-        {currentGame?.ended &&
-          currentGame?.quiz.questions &&
-          currentGame?.quiz.questions.length > 0 && (
-            <EndedQuiz
-              questions={currentGame.quiz.questions}
-              userAnswers={userAnswers}
-            />
-          )}
+        {currentGame?.ended && currentGame?.quiz.questions && currentGame?.quiz.questions.length > 0 && (
+          <EndedQuiz questions={currentGame.quiz.questions} userAnswers={userAnswers} />
+        )}
 
-        <Box
-          className="submit-button"
-          sx={{ marginTop: "30px", marginBottom: "50px", display: "flex" }}
-        >
+        <Box className="submit-button" sx={{ marginTop: '30px', marginBottom: '50px', display: 'flex' }}>
           {isHost && gameStarted && hasMoreQuestions && (
-            <Button
-              variant="contained"
-              size="large"
-              onClick={onNextQuestion}
-              sx={{ marginLeft: "auto" }}
-            >
+            <Button variant="contained" size="large" onClick={onNextQuestion} sx={{ marginLeft: 'auto' }}>
               NEXT QUESTION
             </Button>
           )}
 
-          {isHost &&
-            gameStarted &&
-            !hasMoreQuestions &&
-            !currentGame?.ended && (
-              <Button
-                variant="contained"
-                size="large"
-                onClick={getQuizResults}
-                sx={{ marginLeft: "auto" }}
-              >
-                GET QUIZ RESULTS
-              </Button>
-            )}
+          {isHost && gameStarted && !hasMoreQuestions && !currentGame?.ended && (
+            <Button variant="contained" size="large" onClick={getQuizResults} sx={{ marginLeft: 'auto' }}>
+              GET QUIZ RESULTS
+            </Button>
+          )}
 
           {!isHost && gameStarted && !currentGame?.ended && (
-            <Button
-              variant="contained"
-              size="large"
-              onClick={onSubmitAnswer}
-              sx={{ marginLeft: "auto" }}
-              disabled={!canSubmit || !answer}
-            >
-              {!canSubmit ? "SUBMITED" : "SUBMIT ANSWER"}
+            <Button variant="contained" size="large" onClick={onSubmitAnswer} sx={{ marginLeft: 'auto' }} disabled={!canSubmit || !answer}>
+              {!canSubmit ? 'SUBMITED' : 'SUBMIT ANSWER'}
             </Button>
           )}
 
