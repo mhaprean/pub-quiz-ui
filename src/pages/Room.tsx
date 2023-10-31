@@ -232,8 +232,8 @@ const Room = ({ socket, user, currentGame, onRefetch = () => {}, isHost = false,
           <HostRoomHeader
             password={currentGame.password}
             total={totalParticipants}
-            tournamentName={currentGame.tournament.title}
-            gameName={currentGame.title}
+            tournamentTittle={currentGame.tournament.title}
+            gameTitle={currentGame.title}
           />
         )}
 
