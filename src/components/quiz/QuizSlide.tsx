@@ -147,8 +147,8 @@ const QuizSlide = ({
       )}
 
       {question.video && (isHost || ended) && (
-        <div style={{ marginBottom: '20px' }}>
-          <ReactPlayer url={question.video} controls={true} style={{ margin: 'auto' }} />
+        <div className="image-box">
+          <ReactPlayer url={question.video} controls={true} style={{ margin: 'auto', height: 'auto' }} />
         </div>
       )}
 
