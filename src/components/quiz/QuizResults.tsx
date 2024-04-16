@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { IResultsUser } from '../../redux/apiSlice';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+const winners = ['Seekers'];
+
 interface IPropsGameResults {
   users: IResultsUser[];
   total?: number;
@@ -57,7 +59,7 @@ const QuizResults = ({ users, total = 0, title = 'QUIZ RESULTS:', gameId = '' }:
               key={user.id || idx}
               sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
             >
-              <Typography variant="subtitle1">
+              <Typography variant="subtitle1" sx={{ color: winners.includes(user.username) ? '#FFD700' : '#fff'}}>
                 {`${idx + 1}. `} {user.username}
               </Typography>
               <Typography variant="subtitle1">{total ? `${user.points} / ${total}` : user.points}</Typography>
@@ -83,7 +85,7 @@ const QuizResults = ({ users, total = 0, title = 'QUIZ RESULTS:', gameId = '' }:
                 key={user.id || idx}
                 sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
               >
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" sx={{ color: winners.includes(user.username) ? '#FFD700' : '#fff'}}>
                   {`${idx + 1}. `} {user.username}
                 </Typography>
                 <Typography variant="subtitle1">{total ? `${user.points} / ${total}` : user.points}</Typography>

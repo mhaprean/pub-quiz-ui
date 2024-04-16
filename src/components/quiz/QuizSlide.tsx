@@ -26,6 +26,7 @@ interface IPropsQuizSlide {
 }
 
 const StyledQuizSlide = styled('div')`
+  user-select: none;
   .question {
     text-align: center;
     padding: 20px 10px;

@@ -28,8 +28,8 @@ function App() {
     palette: {
       mode: 'dark',
       background: {
-        default: '#262a33',
-        paper: '#2e323c',
+        default: 'rgb(2, 8, 23)',
+        paper: '#05153d',
       },
       primary: {
         main: '#b0bfff',

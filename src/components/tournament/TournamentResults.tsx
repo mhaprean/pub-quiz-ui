@@ -6,6 +6,8 @@ import { IResultsUser } from '../../redux/apiSlice';
 
 const BASE_URL = import.meta.env.BASE_URL;
 
+const winners = ['Seekers'];
+
 const StyledTournamentResults = styled('div')`
   margin-bottom: 50px;
   .title {
@@ -50,7 +52,7 @@ const TournamentResults = ({ users, title = '' }: IPropsTournamentResults) => {
             <img src={BASE_URL + user.image} width={'32px'} height={'32px'} />
           </Avatar>
 
-          <Typography variant="subtitle1">{user.username}</Typography>
+          <Typography variant="subtitle1" sx={{ color: winners.includes(user.username) ? '#FFD700' : '#fff'}}>{user.username}</Typography>
           <Typography variant="subtitle1" className="points">
             {user.points}
           </Typography>
