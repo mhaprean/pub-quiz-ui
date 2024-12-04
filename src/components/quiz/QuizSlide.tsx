@@ -147,13 +147,13 @@ const QuizSlide = ({
         </div>
       )}
 
-      {question.video && (isHost || ended) && (
+      {question.video && (
         <div className="image-box">
           <ReactPlayer url={question.video} controls={true} style={{ margin: 'auto', height: 'auto' }} />
         </div>
       )}
 
-      {question.song && (isHost || ended) && <ReactAudioPlayer className="player" src={question.song} controls />}
+      {question.song && <ReactAudioPlayer className="player" src={question.song} controls />}
 
       <div className="answers">
         {question.answers.map((ans, idx) => (
